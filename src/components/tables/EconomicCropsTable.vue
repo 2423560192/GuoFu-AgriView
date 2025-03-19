@@ -7,12 +7,13 @@
       :header-cell-style="tableHeaderStyle"
       :cell-style="tableCellStyle"
       size="mini"
-      border>
-      <el-table-column prop="category" label="作物类别" width="100"></el-table-column>
-      <el-table-column prop="2021" label="2021年面积(亩)"></el-table-column>
-      <el-table-column prop="2022" label="2022年面积(亩)"></el-table-column>
-      <el-table-column prop="2023" label="2023年面积(亩)"></el-table-column>
-      <el-table-column prop="2024" label="2024年面积(亩)"></el-table-column>
+      border
+      :max-height="220">
+      <el-table-column prop="category" label="作物类别" width="90" fixed="left"></el-table-column>
+      <el-table-column prop="2021" label="2021年面积(亩)" width="110"></el-table-column>
+      <el-table-column prop="2022" label="2022年面积(亩)" width="110"></el-table-column>
+      <el-table-column prop="2023" label="2023年面积(亩)" width="110"></el-table-column>
+      <el-table-column prop="2024" label="2024年面积(亩)" width="110"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -29,13 +30,13 @@ export default {
         background: '#1a3059',
         color: '#fff',
         fontSize: '12px',
-        padding: '5px'
+        padding: '5px 0'
       },
       tableCellStyle: {
         background: '#0c1f3e',
         color: '#fff',
         fontSize: '12px',
-        padding: '5px'
+        padding: '3px'
       }
     }
   }
@@ -48,7 +49,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 5px;
   box-sizing: border-box;
 }
 
@@ -56,29 +57,61 @@ export default {
   font-size: 14px;
   color: #fff;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
-.el-table {
+:deep(.el-table) {
+  background-color: transparent !important;
   --el-table-border-color: rgba(255, 255, 255, 0.1);
   --el-table-font-color: #fff;
   --el-table-header-background-color: #1a3059;
   --el-table-row-hover-background-color: #1a3059;
+  font-size: 12px;
 }
 
-/* 自定义滚动条样式 */
+:deep(.el-table__header-wrapper) {
+  min-height: 30px;
+}
+
+:deep(.el-table__header th) {
+  height: 30px;
+  padding: 3px 0;
+}
+
+:deep(.el-table__body td) {
+  height: 28px;
+  padding: 2px 0;
+}
+
 :deep(.el-table__body-wrapper::-webkit-scrollbar) {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 :deep(.el-table__body-wrapper::-webkit-scrollbar-thumb) {
   background: rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 :deep(.el-table__body-wrapper::-webkit-scrollbar-track) {
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
+  border-radius: 2px;
+}
+
+:deep(.el-table--border), :deep(.el-table--group) {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+:deep(.el-table--border::after), :deep(.el-table--group::after) {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+:deep(.el-table__fixed-right::before), :deep(.el-table__fixed::before) {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+:deep(.el-table .cell) {
+  padding-left: 5px;
+  padding-right: 5px;
 }
 </style> 

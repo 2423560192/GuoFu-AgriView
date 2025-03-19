@@ -41,7 +41,6 @@ export default {
     initChart() {
       this.chart = this.$echarts.init(this.$refs.chart)
       
-      // 这里使用模拟数据，实际项目中应该使用真实的地图数据
       const option = {
         backgroundColor: 'transparent',
         tooltip: {
@@ -75,7 +74,9 @@ export default {
             type: 'map',
             map: 'guofu',
             roam: true,
-            zoom: 1.2,
+            zoom: 1,
+            center: [100, 100],
+            aspectScale: 1,
             selectedMode: false,
             label: {
               show: true,
@@ -104,12 +105,10 @@ export default {
                 shadowBlur: 10
               }
             },
-            data: economicCropsData.villageData2024.map(item => {
-              return {
-                name: item.village,
-                value: item.area
-              }
-            })
+            data: economicCropsData.villageData2024.map(item => ({
+              name: item.village,
+              value: item.area
+            }))
           }
         ],
         animation: true,
@@ -117,20 +116,21 @@ export default {
         animationEasing: 'cubicOut'
       }
       
-      // 注册地图数据（实际项目中应该使用真实的地图数据）
+      const radius = 80
+      const centerOffset = 120
       this.$echarts.registerMap('guofu', {
         type: 'FeatureCollection',
         features: economicCropsData.villageData2024.map((item, index) => {
-          // 创建模拟的地图区域
-          const centerX = Math.cos(index * Math.PI / 7.5) * 50 + 100
-          const centerY = Math.sin(index * Math.PI / 7.5) * 50 + 100
+          const angle = (index * Math.PI * 2) / economicCropsData.villageData2024.length
+          const centerX = Math.cos(angle) * radius + centerOffset
+          const centerY = Math.sin(angle) * radius + centerOffset
           
           return {
             type: 'Feature',
             properties: { name: item.village },
             geometry: {
               type: 'Polygon',
-              coordinates: [this.createPolygon(centerX, centerY, 15 + Math.random() * 10)]
+              coordinates: [this.createPolygon(centerX, centerY, 25 + Math.random() * 15)]
             }
           }
         })
@@ -140,20 +140,18 @@ export default {
     },
     createPolygon(centerX, centerY, radius) {
       const points = []
-      const count = 5 + Math.floor(Math.random() * 4)
+      const count = 6 + Math.floor(Math.random() * 3)
       
       for (let i = 0; i < count; i++) {
         const angle = (i / count) * Math.PI * 2
-        const r = radius * (0.8 + Math.random() * 0.4)
+        const r = radius * (0.85 + Math.random() * 0.3)
         points.push([
           centerX + Math.cos(angle) * r,
           centerY + Math.sin(angle) * r
         ])
       }
       
-      // 闭合多边形
       points.push([...points[0]])
-      
       return points
     },
     handleResize() {
