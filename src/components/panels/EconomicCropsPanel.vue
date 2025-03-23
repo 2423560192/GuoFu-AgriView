@@ -5,17 +5,21 @@
       <div class="panel-title">经济作物生产情况</div>
     </div>
     <div class="panel-content">
-      <div class="chart-container">
-        <EconomicCropsTrend />
+      <div class="chart-row">
+        <div class="chart-container">
+          <EconomicCropsTrend />
+        </div>
+        <div class="chart-container">
+          <EconomicCropsPie />
+        </div>
       </div>
-      <div class="chart-container">
-        <EconomicCropsPie />
-      </div>
-      <div class="chart-container">
-        <EconomicCropsTable />
-      </div>
-      <div class="chart-container">
-        <EconomicCropsVillage />
+      <div class="chart-row">
+        <div class="chart-container">
+          <EconomicCropsTable />
+        </div>
+        <div class="chart-container">
+          <EconomicCropsVillage />
+        </div>
       </div>
     </div>
   </div>
@@ -50,7 +54,7 @@ export default {
 }
 
 .panel-header {
-  height: 45px;
+  height: 40px;
   display: flex;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.3);
@@ -72,15 +76,21 @@ export default {
 
 .panel-content {
   flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 15px;
-  padding: 15px;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow: hidden;
+  gap: 10px;
+}
+
+.chart-row {
+  display: flex;
+  gap: 10px;
+  flex: 1;
 }
 
 .chart-container {
+  flex: 1;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -91,9 +101,8 @@ export default {
 }
 
 @media screen and (max-width: 768px) {
-  .panel-content {
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, 1fr);
+  .chart-row {
+    flex-direction: column;
   }
 }
 </style> 

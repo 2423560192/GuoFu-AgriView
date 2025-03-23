@@ -60,7 +60,7 @@ export default {
 .overview-container {
   display: flex;
   justify-content: space-between;
-  gap: 15px;
+  gap: 10px;
   width: 100%;
   height: 100%;
 }
@@ -71,7 +71,7 @@ export default {
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
-  padding: 15px;
+  padding: 10px;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -94,13 +94,13 @@ export default {
 }
 
 .card-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 15px;
+  margin-right: 10px;
   z-index: 1;
 }
 
@@ -117,16 +117,16 @@ export default {
 }
 
 .card-title {
-  font-size: 14px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .card-value {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: bold;
   color: #fff;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .card-trend {

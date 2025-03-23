@@ -8,13 +8,13 @@
       :cell-style="tableCellStyle"
       size="mini"
       border
-      :max-height="220">
-      <el-table-column prop="index" label="序号" width="50" align="center"></el-table-column>
-      <el-table-column prop="category" label="各类经济作物" width="140" fixed="left"></el-table-column>
-      <el-table-column prop="2024" label="2024年面积(亩)" width="130" align="right"></el-table-column>
-      <el-table-column prop="2023" label="2023年面积(亩)" width="130" align="right"></el-table-column>
-      <el-table-column prop="2022" label="2022年面积(亩)" width="130" align="right"></el-table-column>
-      <el-table-column prop="2021" label="2021年面积(亩)" width="130" align="right"></el-table-column>
+      :max-height="180">
+      <el-table-column prop="index" label="序号" width="85" align="center"></el-table-column>
+      <el-table-column prop="category" label="各类经济作物" width="145"></el-table-column>
+      <el-table-column prop="2024" label="2024年面积(亩)" width="145" align="right"></el-table-column>
+      <el-table-column prop="2023" label="2023年面积(亩)" width="145" align="right"></el-table-column>
+      <el-table-column prop="2022" label="2022年面积(亩)" width="145" align="right"></el-table-column>
+      <el-table-column prop="2021" label="2021年面积(亩)" width="145" align="right"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -60,7 +60,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 5px;
   box-sizing: border-box;
 }
 
@@ -68,12 +68,16 @@ export default {
   font-size: 14px;
   color: #fff;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 :deep(.el-table) {
   background-color: transparent !important;
   color: #fff;
+}
+
+:deep(.el-table), :deep(.el-table__fixed) {
+  max-width: 100%;
 }
 
 :deep(.el-table tr), :deep(.el-table th) {

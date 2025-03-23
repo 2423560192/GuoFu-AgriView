@@ -1,5 +1,6 @@
 <template>
   <div class="chart-wrapper">
+    <div class="chart-title">各村2024年经济作物播种面积</div>
     <div ref="chart" class="chart"></div>
   </div>
 </template>
@@ -39,27 +40,24 @@ export default {
     this.initChart()
     window.addEventListener('resize', this.handleResize)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.handleResize)
     if (this.chart) {
       this.chart.dispose()
+      this.chart = null
     }
   },
   methods: {
     initChart() {
-      // 对数据进行排序（已经预先排序了，但为了保险起见）
+      // 对数据进行排序（从大到小）
       const sortedData = [...this.villageData].sort((a, b) => b.area - a.area)
+      
+      // 将数据转换为适合垂直条形图的格式
+      const villages = sortedData.map(item => item.village)
+      const areas = sortedData.map(item => item.area)
       
       this.chart = this.$echarts.init(this.$refs.chart)
       const option = {
-        title: {
-          text: '各村2024年经济作物播种面积',
-          textStyle: {
-            color: '#fff',
-            fontSize: 14
-          },
-          left: 'center'
-        },
         tooltip: {
           trigger: 'axis',
           formatter: '{b}<br/>播种面积: {c} 亩',
@@ -70,10 +68,10 @@ export default {
           }
         },
         grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '5%',
-          top: '15%',
+          top: '3%',
+          right: '8%',
+          bottom: '3%',
+          left: '15%',
           containLabel: true
         },
         xAxis: {
@@ -98,7 +96,8 @@ export default {
         },
         yAxis: {
           type: 'category',
-          data: sortedData.map(item => item.village),
+          data: villages,
+          inverse: true,
           axisLine: {
             lineStyle: {
               color: 'rgba(255, 255, 255, 0.3)'
@@ -106,27 +105,33 @@ export default {
           },
           axisLabel: {
             color: 'rgba(255, 255, 255, 0.7)',
-            fontSize: 10,
-            interval: 0
-          },
-          axisTick: {
-            alignWithLabel: true
+            margin: 10,
+            fontSize: 11
           }
         },
         series: [
           {
             name: '播种面积',
             type: 'bar',
-            data: sortedData.map(item => item.area),
+            data: areas,
+            barWidth: '60%',
             itemStyle: {
               color: new this.$echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                { offset: 0, color: '#43aa8b' },
-                { offset: 1, color: '#90be6d' }
+                { offset: 0, color: 'rgba(76, 213, 206, 0.3)' },
+                { offset: 1, color: 'rgba(76, 213, 206, 0.8)' }
               ])
+            },
+            label: {
+              show: true,
+              position: 'right',
+              color: '#fff',
+              fontSize: 10,
+              formatter: '{c} 亩'
             }
           }
         ]
       }
+      
       this.chart.setOption(option)
     },
     handleResize() {
@@ -144,6 +149,14 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 5px;
+}
+
+.chart-title {
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 5px;
 }
 
 .chart {
