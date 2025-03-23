@@ -9,7 +9,7 @@
         <div class="card-value">{{ item.value }}</div>
         <div class="card-trend" :class="item.trend > 0 ? 'up' : 'down'">
           <i :class="item.trend > 0 ? 'el-icon-top' : 'el-icon-bottom'"></i>
-          <span>{{ Math.abs(item.trend) }}%</span>
+          <span class="trend-percentage">{{ Math.abs(item.trend) }}%</span>
         </div>
       </div>
     </div>
@@ -117,7 +117,7 @@ export default {
 }
 
 .card-title {
-  font-size: 12px;
+  font-size: 15px;
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 3px;
 }
@@ -135,6 +135,12 @@ export default {
   align-items: center;
 }
 
+.trend-percentage {
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 2px;
+}
+
 .card-trend.up {
   color: #4cd5ce;
 }
@@ -144,7 +150,8 @@ export default {
 }
 
 .card-trend i {
-  margin-right: 5px;
+  margin-right: 2px;
+  font-size: 14px;
 }
 
 @media screen and (max-width: 1200px) {

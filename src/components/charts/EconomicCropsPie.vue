@@ -93,7 +93,8 @@ export default {
             color: '#fff',
             fontSize: 14
           },
-          left: 'center'
+          left: 'center',
+          top: 5
         },
         tooltip: {
           trigger: 'item',
@@ -107,7 +108,7 @@ export default {
         legend: {
           orient: 'vertical',
           right: 10,
-          top: 'center',
+          top: 'middle',
           textStyle: {
             color: 'rgba(255, 255, 255, 0.7)',
             fontSize: 12
@@ -117,8 +118,8 @@ export default {
           {
             name: '面积占比',
             type: 'pie',
-            radius: ['35%', '70%'],
-            center: ['40%', '50%'],
+            radius: ['35%', '65%'],
+            center: ['45%', '55%'],
             avoidLabelOverlap: false,
             label: {
               show: false
@@ -169,7 +170,7 @@ export default {
             legend: {
               orient: 'vertical',
               right: 10,
-              top: 'center',
+              top: 'middle',
               itemWidth: 12,
               itemHeight: 8,
               textStyle: {
@@ -177,8 +178,8 @@ export default {
               }
             },
             series: [{
-              radius: ['35%', '70%'],
-              center: ['40%', '50%'],
+              radius: ['35%', '65%'],
+              center: ['45%', '55%'],
             }]
           })
         }
@@ -194,7 +195,8 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 10px;
+  padding: 0 5px;
+  box-sizing: border-box;
 }
 
 .year-tabs {
@@ -202,10 +204,11 @@ export default {
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .year-tab {
-  padding: 5px 10px;
+  padding: 4px 8px;
   cursor: pointer;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.7);
@@ -228,6 +231,9 @@ export default {
 
 .chart {
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media screen and (max-width: 480px) {
@@ -235,6 +241,10 @@ export default {
     padding: 3px 6px;
     font-size: 10px;
     margin: 1px;
+  }
+  
+  .chart-wrapper {
+    padding: 0 3px;
   }
 }
 </style> 
