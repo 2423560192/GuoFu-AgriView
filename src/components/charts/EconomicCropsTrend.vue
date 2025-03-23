@@ -9,14 +9,16 @@
 </template>
 
 <script>
-import { economicCropsData } from '../../data/agricultural-data.js'
-
 export default {
   name: 'EconomicCropsTrend',
   data() {
     return {
       chart: null,
-      loading: true
+      loading: true,
+      cropData: {
+        years: ['2021', '2022', '2023', '2024'],
+        totalArea: [47964, 16822, 51646, 51524.5]
+      }
     }
   },
   mounted() {
@@ -41,130 +43,94 @@ export default {
       this.chart = this.$echarts.init(this.$refs.chart)
       const option = {
         title: {
-          text: '2021-2024年经济作物总播种面积趋势',
+          text: '全镇2021-2024年经济作物总播种面积',
           textStyle: {
             color: '#fff',
-            fontSize: 14,
-            fontWeight: 'normal'
+            fontSize: 14
           },
-          left: 'center',
-          top: 10
+          left: 'center'
         },
         tooltip: {
           trigger: 'axis',
+          formatter: '{b}年<br/>总播种面积: {c} 亩',
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          borderColor: 'rgba(76, 213, 206, 0.3)',
-          borderWidth: 1,
+          borderColor: 'rgba(255, 255, 255, 0.2)',
           textStyle: {
             color: '#fff'
-          },
-          axisPointer: {
-            type: 'line',
-            lineStyle: {
-              color: 'rgba(76, 213, 206, 0.5)',
-              width: 1
-            }
           }
         },
         grid: {
-          left: '5%',
-          right: '5%',
-          bottom: '10%',
-          top: '20%',
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
           containLabel: true
         },
         xAxis: {
           type: 'category',
-          data: economicCropsData.totalArea.years,
+          boundaryGap: false,
+          data: this.cropData.years,
           axisLine: {
             lineStyle: {
               color: 'rgba(255, 255, 255, 0.3)'
             }
           },
-          axisTick: {
-            show: false
-          },
           axisLabel: {
-            color: '#fff',
-            fontSize: 12,
-            margin: 10
+            color: 'rgba(255, 255, 255, 0.7)'
           }
         },
         yAxis: {
           type: 'value',
-          name: '面积(亩)',
+          name: '亩',
           nameTextStyle: {
-            color: 'rgba(255, 255, 255, 0.7)',
-            fontSize: 12,
-            padding: [0, 0, 0, 5]
-          },
-          axisLine: {
-            show: false
-          },
-          axisTick: {
-            show: false
-          },
-          axisLabel: {
-            color: '#fff',
-            fontSize: 12
+            color: 'rgba(255, 255, 255, 0.7)'
           },
           splitLine: {
             lineStyle: {
-              color: 'rgba(255, 255, 255, 0.1)',
-              type: 'dashed'
+              color: 'rgba(255, 255, 255, 0.1)'
             }
+          },
+          axisLine: {
+            lineStyle: {
+              color: 'rgba(255, 255, 255, 0.3)'
+            }
+          },
+          axisLabel: {
+            color: 'rgba(255, 255, 255, 0.7)'
           }
         },
         series: [
           {
             name: '总播种面积',
             type: 'line',
-            data: economicCropsData.totalArea.data,
+            data: this.cropData.totalArea,
             smooth: true,
-            lineStyle: {
-              width: 4,
-              color: {
-                type: 'linear',
-                x: 0,
-                y: 0,
-                x2: 0,
-                y2: 1,
-                colorStops: [{
-                  offset: 0, color: '#4cd5ce'
-                }, {
-                  offset: 1, color: '#43aa8b'
-                }]
-              },
-              shadowColor: 'rgba(76, 213, 206, 0.3)',
-              shadowBlur: 10
-            },
             symbol: 'circle',
-            symbolSize: 10,
-            itemStyle: {
-              color: '#4cd5ce',
-              borderColor: '#fff',
-              borderWidth: 2,
-              shadowColor: 'rgba(76, 213, 206, 0.5)',
-              shadowBlur: 5
+            symbolSize: 8,
+            lineStyle: {
+              width: 3,
+              color: '#4cd5ce'
             },
-            emphasis: {
-              scale: true,
-              itemStyle: {
-                borderWidth: 3
-              }
+            itemStyle: {
+              color: '#4cd5ce'
             },
             areaStyle: {
               color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
                 { offset: 0, color: 'rgba(76, 213, 206, 0.8)' },
-                { offset: 0.8, color: 'rgba(76, 213, 206, 0.1)' },
-                { offset: 1, color: 'rgba(76, 213, 206, 0)' }
+                { offset: 1, color: 'rgba(76, 213, 206, 0.1)' }
               ])
+            },
+            emphasis: {
+              itemStyle: {
+                borderWidth: 3,
+                borderColor: 'rgba(255, 255, 255, 0.8)',
+                color: '#43aa8b'
+              }
             }
           }
         ],
-        animationDuration: 2000,
-        animationEasing: 'cubicInOut'
+        animationDuration: 1500
       }
+      
       this.chart.setOption(option)
     },
     handleResize() {

@@ -6,7 +6,14 @@
         :class="{ active: currentPage === 'economic' }" 
         @click="switchPage('economic')"
       >
-        <i class="el-icon-s-grid"></i> 经济作物与粮食生产
+        <i class="el-icon-s-grid"></i> 经济作物生产
+      </div>
+      <div 
+        class="tab" 
+        :class="{ active: currentPage === 'grain' }" 
+        @click="switchPage('grain')"
+      >
+        <i class="el-icon-s-data"></i> 粮食生产情况
       </div>
       <div 
         class="tab" 
@@ -18,6 +25,7 @@
     </div>
     <transition name="fade" mode="out-in">
       <EconomicPage v-if="currentPage === 'economic'" key="economic" />
+      <GrainPage v-else-if="currentPage === 'grain'" key="grain" />
       <AgriculturalPage v-else key="agricultural" />
     </transition>
   </div>
@@ -25,12 +33,14 @@
 
 <script>
 import EconomicPage from './pages/EconomicPage.vue'
+import GrainPage from './pages/GrainPage.vue'
 import AgriculturalPage from './pages/AgriculturalPage.vue'
 
 export default {
   name: 'App',
   components: {
     EconomicPage,
+    GrainPage,
     AgriculturalPage
   },
   data() {

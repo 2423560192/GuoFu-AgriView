@@ -4,19 +4,19 @@
     <div class="header">
       <div class="header-bg"></div>
       <div class="logo pulse-slow">🌾</div>
-      <h1 class="title">郭扶镇经济作物生产情况可视化大屏</h1>
+      <h1 class="title">郭扶镇粮食生产情况可视化大屏</h1>
       <div class="date">{{ currentDate }}</div>
     </div>
     
     <!-- 数据概览 -->
     <div class="overview-section">
-      <EconomicOverview />
+      <GrainOverview />
     </div>
     
     <!-- 主要内容区域 -->
     <div class="content">
       <div class="panel-container slide-in">
-        <EconomicCropsPanel />
+        <GrainProductionPanel />
       </div>
     </div>
   </div>
@@ -24,14 +24,14 @@
 
 <script>
 import { getCurrentDate } from '../data/agricultural-data.js'
-import EconomicOverview from '../components/overview/EconomicOverview.vue'
-import EconomicCropsPanel from '../components/panels/EconomicCropsPanel.vue'
+import GrainOverview from '../components/overview/GrainOverview.vue'
+import GrainProductionPanel from '../components/panels/GrainProductionPanel.vue'
 
 export default {
-  name: 'EconomicPage',
+  name: 'GrainPage',
   components: {
-    EconomicOverview,
-    EconomicCropsPanel
+    GrainOverview,
+    GrainProductionPanel
   },
   data() {
     return {
@@ -66,7 +66,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(76,213,206,0.1) 50%, rgba(0,0,0,0) 100%);
+  background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(249,199,79,0.1) 50%, rgba(0,0,0,0) 100%);
   z-index: 0;
 }
 
@@ -80,7 +80,7 @@ export default {
   font-size: 28px;
   font-weight: bold;
   color: #fff;
-  text-shadow: 0 0 10px rgba(76, 213, 206, 0.8);
+  text-shadow: 0 0 10px rgba(249, 199, 79, 0.8);
   margin: 0;
   z-index: 1;
   letter-spacing: 2px;
