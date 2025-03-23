@@ -1,14 +1,14 @@
 <template>
-  <div class="table-wrapper">
-    <div class="table-title">全镇2021-2024年各类经济作物总播种面积</div>
-    <div class="table-container">
+  <div class="chart-wrapper">
+    <div class="chart-title">全镇2021-2024年各类经济作物总播种面积</div>
+    <!-- 固定高度为200px的容器 -->
+    <div class="fixed-height-container">
       <el-table
         :data="tableData"
-        style="width: 100%; height: 100%"
+        style="width: 100%"
         :header-cell-style="tableHeaderStyle"
         :cell-style="tableCellStyle"
         size="mini"
-        height="100%"
         border>
         <el-table-column prop="index" label="序号" width="60" align="center"></el-table-column>
         <el-table-column prop="category" label="各类经济作物" min-width="120"></el-table-column>
@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style scoped>
-.table-wrapper {
+.chart-wrapper {
   width: 100%;
   height: 100%;
   display: flex;
@@ -67,7 +67,7 @@ export default {
   box-sizing: border-box;
 }
 
-.table-title {
+.chart-title {
   font-size: 14px;
   color: #fff;
   text-align: center;
@@ -75,21 +75,31 @@ export default {
   flex-shrink: 0;
 }
 
-.table-container {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  height: calc(100% - 25px);
+/* 固定高度的容器 */
+.fixed-height-container {
+  height: 250px;
+  overflow-y: auto;
+}
+
+.fixed-height-container::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.fixed-height-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.fixed-height-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
 }
 
 :deep(.el-table) {
   background-color: transparent !important;
   color: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
 }
 
 :deep(.el-table__inner-wrapper) {
@@ -121,21 +131,6 @@ export default {
 :deep(.el-table__body td) {
   height: 25px;
   padding: 2px 0;
-}
-
-:deep(.el-table__body-wrapper::-webkit-scrollbar) {
-  width: 4px;
-  height: 4px;
-}
-
-:deep(.el-table__body-wrapper::-webkit-scrollbar-thumb) {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
-}
-
-:deep(.el-table__body-wrapper::-webkit-scrollbar-track) {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
 }
 
 :deep(.el-table--border), :deep(.el-table--group) {

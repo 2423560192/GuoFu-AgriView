@@ -1,7 +1,10 @@
 <template>
   <div class="chart-wrapper">
     <div class="chart-title">各村2024年经济作物播种面积</div>
-    <div ref="chart" class="chart"></div>
+    <!-- 固定高度为200px的容器 -->
+    <div class="fixed-height-container">
+      <div ref="chart" class="chart"></div>
+    </div>
   </div>
 </template>
 
@@ -37,7 +40,9 @@ export default {
     }
   },
   mounted() {
-    this.initChart()
+    this.$nextTick(() => {
+      this.initChart()
+    })
     window.addEventListener('resize', this.handleResize)
   },
   beforeUnmount() {
@@ -55,6 +60,9 @@ export default {
       // 将数据转换为适合垂直条形图的格式
       const villages = sortedData.map(item => item.village)
       const areas = sortedData.map(item => item.area)
+      
+      // 设置固定高度为600px，确保可以容纳所有村庄数据
+      this.$refs.chart.style.height = '600px';
       
       this.chart = this.$echarts.init(this.$refs.chart)
       const option = {
@@ -150,6 +158,7 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 5px;
+  box-sizing: border-box;
 }
 
 .chart-title {
@@ -157,9 +166,32 @@ export default {
   color: #fff;
   text-align: center;
   margin-bottom: 5px;
+  flex-shrink: 0;
+}
+
+/* 固定高度的容器 */
+.fixed-height-container {
+  height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.fixed-height-container::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.fixed-height-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.fixed-height-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
 }
 
 .chart {
-  flex: 1;
+  width: 100%;
 }
 </style> 
