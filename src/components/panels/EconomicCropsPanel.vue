@@ -5,15 +5,14 @@
       <div class="panel-title">经济作物生产情况</div>
     </div>
     <div class="panel-content">
-      <div class="chart-row">
+      <!-- 自动适应屏幕尺寸的布局 -->
+      <div class="responsive-layout">
         <div class="chart-container">
           <EconomicCropsTrend />
         </div>
         <div class="chart-container">
           <EconomicCropsPie />
         </div>
-      </div>
-      <div class="chart-row">
         <div class="chart-container table-container">
           <EconomicCropsTable />
         </div>
@@ -80,17 +79,19 @@ export default {
   flex-direction: column;
   padding: 10px;
   overflow: hidden;
-  gap: 10px;
 }
 
-.chart-row {
-  display: flex;
+/* 响应式布局容器 */
+.responsive-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   gap: 10px;
-  flex: 1;
+  height: 100%;
+  width: 100%;
 }
 
 .chart-container {
-  flex: 1;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -98,15 +99,39 @@ export default {
   flex-direction: column;
   overflow: hidden;
   padding: 5px;
+  min-height: 0; /* 解决Firefox中grid子项溢出的问题 */
 }
 
 .table-container {
   padding: 10px 5px 5px 5px;
 }
 
-@media screen and (max-width: 768px) {
-  .chart-row {
-    flex-direction: column;
+/* 响应式断点 */
+@media screen and (max-width: 1200px) {
+  .responsive-layout {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .responsive-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, minmax(250px, 1fr));
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .panel-content {
+    padding: 5px;
+  }
+  
+  .responsive-layout {
+    gap: 5px;
+  }
+  
+  .chart-container {
+    padding: 3px;
   }
 }
 </style> 

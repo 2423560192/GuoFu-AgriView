@@ -31,14 +31,14 @@ export default {
         },
         {
           title: '2024年最多播种面积（作物）',
-          value: '6,564亩',
+          value: '蔬菜及食用菌 - 6,564亩',
           trend: 1.7,
           icon: 'el-icon-s-finance',
           color: 'rgba(144, 190, 109, 0.8)'
         },
         {
           title: '2024年最多播种面积（村）',
-          value: '32,658亩',
+          value: '平等村 - 4067.8亩',
           trend: 4.5,
           icon: 'el-icon-s-data',
           color: 'rgba(76, 213, 206, 0.8)'

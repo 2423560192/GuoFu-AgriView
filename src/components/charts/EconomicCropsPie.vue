@@ -59,9 +59,18 @@ export default {
   mounted() {
     this.initChart()
     window.addEventListener('resize', this.handleResize)
+    if (window.ResizeObserver) {
+      this.observer = new ResizeObserver(() => {
+        this.handleResize()
+      })
+      this.observer.observe(this.$refs.chart)
+    }
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize)
+    if (this.observer) {
+      this.observer.disconnect()
+    }
     if (this.chart) {
       this.chart.dispose()
     }
@@ -135,6 +144,44 @@ export default {
     handleResize() {
       if (this.chart) {
         this.chart.resize()
+        
+        const containerWidth = this.$refs.chart.clientWidth
+        if (containerWidth < 300) {
+          this.chart.setOption({
+            legend: {
+              orient: 'horizontal',
+              right: 'center',
+              top: 'bottom',
+              itemWidth: 10,
+              itemHeight: 6,
+              itemGap: 6,
+              textStyle: {
+                fontSize: 10
+              }
+            },
+            series: [{
+              radius: ['30%', '60%'],
+              center: ['50%', '45%'],
+            }]
+          })
+        } else {
+          this.chart.setOption({
+            legend: {
+              orient: 'vertical',
+              right: 10,
+              top: 'center',
+              itemWidth: 12,
+              itemHeight: 8,
+              textStyle: {
+                fontSize: 12
+              }
+            },
+            series: [{
+              radius: ['35%', '70%'],
+              center: ['40%', '50%'],
+            }]
+          })
+        }
       }
     }
   }
@@ -153,7 +200,8 @@ export default {
 .year-tabs {
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 5px;
 }
 
 .year-tab {
@@ -162,7 +210,7 @@ export default {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.7);
   border-radius: 4px;
-  margin: 0 5px;
+  margin: 2px;
   transition: all 0.3s ease;
   border: 1px solid transparent;
 }
@@ -180,5 +228,13 @@ export default {
 
 .chart {
   flex: 1;
+}
+
+@media screen and (max-width: 480px) {
+  .year-tab {
+    padding: 3px 6px;
+    font-size: 10px;
+    margin: 1px;
+  }
 }
 </style> 

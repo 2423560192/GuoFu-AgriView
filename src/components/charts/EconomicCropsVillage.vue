@@ -1,7 +1,7 @@
 <template>
   <div class="chart-wrapper">
     <div class="chart-title">各村2024年经济作物播种面积</div>
-    <!-- 固定高度为200px的容器 -->
+    <!-- 固定高度容器 -->
     <div class="fixed-height-container">
       <div ref="chart" class="chart"></div>
     </div>
@@ -44,9 +44,20 @@ export default {
       this.initChart()
     })
     window.addEventListener('resize', this.handleResize)
+    
+    // 添加ResizeObserver监听容器大小变化
+    if (window.ResizeObserver) {
+      this.observer = new ResizeObserver(() => {
+        this.handleResize()
+      })
+      this.observer.observe(this.$el)
+    }
   },
-  beforeUnmount() {
+  beforeDestroy() {
     window.removeEventListener('resize', this.handleResize)
+    if (this.observer) {
+      this.observer.disconnect()
+    }
     if (this.chart) {
       this.chart.dispose()
       this.chart = null
@@ -64,6 +75,10 @@ export default {
       // 设置固定高度为600px，确保可以容纳所有村庄数据
       this.$refs.chart.style.height = '600px';
       
+      // 获取容器宽度决定是否显示完整村名
+      const containerWidth = this.$el.clientWidth
+      const showFullName = containerWidth > 350
+      
       this.chart = this.$echarts.init(this.$refs.chart)
       const option = {
         tooltip: {
@@ -77,9 +92,9 @@ export default {
         },
         grid: {
           top: '3%',
-          right: '8%',
+          right: showFullName ? '8%' : '5%',
           bottom: '3%',
-          left: '15%',
+          left: showFullName ? '15%' : '20%',
           containLabel: true
         },
         xAxis: {
@@ -94,7 +109,8 @@ export default {
             }
           },
           axisLabel: {
-            color: 'rgba(255, 255, 255, 0.7)'
+            color: 'rgba(255, 255, 255, 0.7)',
+            fontSize: containerWidth < 400 ? 10 : 11
           },
           splitLine: {
             lineStyle: {
@@ -114,7 +130,13 @@ export default {
           axisLabel: {
             color: 'rgba(255, 255, 255, 0.7)',
             margin: 10,
-            fontSize: 11
+            fontSize: containerWidth < 400 ? 10 : 11,
+            formatter: function(value) {
+              if (!showFullName && value.length > 3) {
+                return value.substring(0, 2) + '..';
+              }
+              return value;
+            }
           }
         },
         series: [
@@ -130,10 +152,10 @@ export default {
               ])
             },
             label: {
-              show: true,
+              show: containerWidth > 300,
               position: 'right',
               color: '#fff',
-              fontSize: 10,
+              fontSize: containerWidth < 400 ? 9 : 10,
               formatter: '{c} 亩'
             }
           }
@@ -144,7 +166,8 @@ export default {
     },
     handleResize() {
       if (this.chart) {
-        this.chart.resize()
+        this.chart.dispose()
+        this.initChart() // 重新初始化以应用响应式变化
       }
     }
   }
@@ -193,5 +216,15 @@ export default {
 
 .chart {
   width: 100%;
+}
+
+@media screen and (max-width: 480px) {
+  .chart-title {
+    font-size: 12px;
+  }
+  
+  .fixed-height-container {
+    height: 200px;
+  }
 }
 </style> 
