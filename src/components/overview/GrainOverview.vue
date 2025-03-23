@@ -67,8 +67,9 @@ export default {
 
 .overview-card {
   flex: 1;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  background-color: rgba(15, 28, 48, 0.6);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   padding: 15px;
@@ -82,15 +83,15 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.1), transparent 70%);
   z-index: 0;
 }
 
 .overview-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .card-icon {
@@ -130,7 +131,7 @@ export default {
 }
 
 .card-trend {
-  font-size: 12px;
+  font-size: 14px;
   display: flex;
   align-items: center;
 }

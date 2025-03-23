@@ -40,7 +40,10 @@ export default {
           trigger: 'axis',
           axisPointer: {
             type: 'cross',
-            crossStyle: {
+            label: {
+              backgroundColor: '#6a7985',
+              color: '#fff',
+              formatter: '{value}',
               color: '#999'
             }
           }
@@ -111,12 +114,22 @@ export default {
         series: [
           {
             name: '面积',
-            type: 'bar',
+            type: 'line',
             data: grainProductionData.areaAndYield.area,
+            smooth: true,
+            symbol: 'circle',
+            symbolSize: 8,
+            lineStyle: {
+              width: 3,
+              color: '#f9c74f'
+            },
             itemStyle: {
+              color: '#f9c74f'
+            },
+            areaStyle: {
               color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: '#f9c74f' },
-                { offset: 1, color: '#f8961e' }
+                { offset: 0, color: 'rgba(249, 199, 79, 0.3)' },
+                { offset: 1, color: 'rgba(249, 199, 79, 0.05)' }
               ])
             }
           },
@@ -151,8 +164,8 @@ export default {
 
 <style scoped>
 .chart-wrapper {
-  width: 100%;
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
 }

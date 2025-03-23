@@ -5,29 +5,19 @@
       <div class="panel-title">粮食生产情况</div>
     </div>
     <div class="panel-content">
+      <!-- 自动适应屏幕尺寸的布局 -->
       <div class="responsive-layout">
-        <!-- 左侧布局 -->
-        <div class="left-charts">
-          <!-- 粮食趋势图 -->
-          <div class="chart-container">
-            <GrainTrend />
-          </div>
-          <!-- 粮食表格 -->
-          <div class="chart-container">
-            <GrainCropsTable />
-          </div>
+        <div class="chart-container">
+          <GrainTrend />
         </div>
-        
-        <!-- 右侧布局 -->
-        <div class="right-charts">
-          <!-- 粮食占比图 -->
-          <div class="chart-container">
-            <GrainPyramid />
-          </div>
-          <!-- 各村粮食面积 -->
-          <div class="chart-container">
-            <GrainVillage />
-          </div>
+        <div class="chart-container">
+          <GrainPyramid />
+        </div>
+        <div class="chart-container table-container">
+          <GrainCropsTable />
+        </div>
+        <div class="chart-container">
+          <GrainVillage />
         </div>
       </div>
     </div>
@@ -41,7 +31,7 @@ import GrainCropsTable from '../tables/GrainCropsTable.vue'
 import GrainVillage from '../charts/GrainVillage.vue'
 
 export default {
-  name: 'GrainProductionPanel',
+  name: 'GrainCropsPanel',
   components: {
     GrainTrend,
     GrainPyramid,
@@ -90,21 +80,14 @@ export default {
   overflow: hidden;
 }
 
-/* 响应式布局容器 - 使用左右分栏布局 */
+/* 响应式布局容器 */
 .responsive-layout {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
   height: 100%;
   width: 100%;
-  gap: 10px;
-  overflow: auto;
-}
-
-.left-charts, .right-charts {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 1;
-  min-width: 0; /* 防止flex项目溢出 */
 }
 
 .chart-container {
@@ -113,18 +96,24 @@ export default {
   padding: 5px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  flex: 1;
-  min-height: 240px;
+}
+
+.table-container {
+  overflow: auto;
 }
 
 /* 响应式断点 */
+@media screen and (max-width: 1200px) {
+  .responsive-layout {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+}
+
 @media screen and (max-width: 900px) {
   .responsive-layout {
-    flex-direction: column;
-  }
-  
-  .left-charts, .right-charts {
-    width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, minmax(250px, 1fr));
   }
 }
 
@@ -137,13 +126,8 @@ export default {
     gap: 5px;
   }
   
-  .left-charts, .right-charts {
-    gap: 5px;
-  }
-  
   .chart-container {
     padding: 3px;
-    min-height: 180px;
   }
 }
 </style> 
