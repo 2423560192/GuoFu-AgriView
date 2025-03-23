@@ -24,31 +24,31 @@ export default {
       overviewData: [
         {
           title: '2024年经济作物总播种面积',
-          value: '51,524.5亩',
+          value: '42,561亩',
           trend: 2.3,
           icon: 'el-icon-s-grid',
-          color: 'rgba(76, 213, 206, 0.8)'
+          color: 'rgba(52, 211, 153, 0.8)'
         },
         {
-          title: '2024年最多播种面积（作物）',
-          value: '蔬菜及食用菌 - 6,564亩',
-          trend: 1.7,
-          icon: 'el-icon-s-finance',
-          color: 'rgba(144, 190, 109, 0.8)'
-        },
-        {
-          title: '2024年最多播种面积（村）',
-          value: '平等村 - 4067.8亩',
-          trend: 4.5,
+          title: '2024年经济作物总产量',
+          value: '18,947吨',
+          trend: 1.8,
           icon: 'el-icon-s-data',
-          color: 'rgba(76, 213, 206, 0.8)'
+          color: 'rgba(16, 185, 129, 0.8)'
         },
         {
-          title: '2024年总作物品种',
-          value: '7种',
-          trend: 0,
-          icon: 'el-icon-s-operation',
-          color: 'rgba(67, 170, 139, 0.8)'
+          title: '2024年经济作物最多播种面积',
+          value: '油料 - 16,982亩',
+          trend: 2.7,
+          icon: 'el-icon-s-finance',
+          color: 'rgba(52, 211, 153, 0.8)'
+        },
+        {
+          title: '2024年经济作物最多产量',
+          value: '蔬菜 - 7,892吨',
+          trend: 1.2,
+          icon: 'el-icon-s-marketing',
+          color: 'rgba(16, 185, 129, 0.8)'
         }
       ]
     }
@@ -60,18 +60,19 @@ export default {
 .overview-container {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 15px;
   width: 100%;
   height: 100%;
 }
 
 .overview-card {
   flex: 1;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  background-color: rgba(15, 28, 48, 0.6);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
-  padding: 10px;
+  padding: 15px;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -82,25 +83,25 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.1), transparent 70%);
   z-index: 0;
 }
 
 .overview-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .card-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 10px;
+  margin-right: 15px;
   z-index: 1;
 }
 
@@ -119,30 +120,24 @@ export default {
 .card-title {
   font-size: 15px;
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 
 .card-value {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: bold;
   color: #fff;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 
 .card-trend {
-  font-size: 12px;
+  font-size: 14px;
   display: flex;
   align-items: center;
 }
 
-.trend-percentage {
-  font-size: 16px;
-  font-weight: bold;
-  margin-left: 2px;
-}
-
 .card-trend.up {
-  color: #4cd5ce;
+  color: #34d399;
 }
 
 .card-trend.down {
@@ -150,8 +145,12 @@ export default {
 }
 
 .card-trend i {
-  margin-right: 2px;
-  font-size: 14px;
+  margin-right: 5px;
+}
+
+.trend-percentage {
+  font-size: 16px;
+  font-weight: bold;
 }
 
 @media screen and (max-width: 1200px) {
