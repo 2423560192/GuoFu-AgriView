@@ -45,7 +45,10 @@ export default {
         '磷肥': '#43aa8b',
         '钾肥': '#f9c74f',
         '复合肥': '#f94144'
-      }
+      },
+      // 年份按从上到下的顺序
+      yearOrder: ['2024年', '2023年', '2022年', '2021年'],
+      fertilizerOrder: ['氮肥', '磷肥', '钾肥', '复合肥']
     };
   },
   mounted() {
@@ -77,13 +80,33 @@ export default {
         nodeNames.add(link.target);
       });
       
-      // 转换为nodes数组
-      const nodes = Array.from(nodeNames).map(name => ({
-        name: name,
-        itemStyle: {
-          color: this.colors[name]
-        }
-      }));
+      // 转换为nodes数组，并手动设置年份节点的位置
+      const nodes = [];
+      
+      // 添加年份节点，指定位置
+      this.yearOrder.forEach((year, index) => {
+        nodes.push({
+          name: year,
+          itemStyle: {
+            color: this.colors[year]
+          },
+          // 固定节点的坐标 - 左侧垂直排列
+          // x坐标设为0（最左侧），y坐标按比例分布
+          x: 0,
+          y: index * (1 / (this.yearOrder.length - 1)),
+          fixed: true
+        });
+      });
+      
+      // 添加肥料类型节点
+      this.fertilizerOrder.forEach(fertilizer => {
+        nodes.push({
+          name: fertilizer,
+          itemStyle: {
+            color: this.colors[fertilizer]
+          }
+        });
+      });
       
       const option = {
         title: {
@@ -101,13 +124,16 @@ export default {
         },
         series: [{
           type: 'sankey',
-          left: '10%',
-          right: '10%',
+          left: '5%',
+          right: '20%',
+          top: '5%',
+          bottom: '5%',
           data: nodes,
           links: this.fertilizerData,
           nodeAlign: 'justify',
           orient: 'horizontal',
           draggable: false,
+          layoutIterations: 0, // 禁用自动布局迭代，使用固定位置
           label: {
             position: 'right',
             color: '#fff',
@@ -127,8 +153,7 @@ export default {
             lineStyle: {
               opacity: 0.9
             }
-          },
-          layoutIterations: 32
+          }
         }]
       };
       
@@ -144,7 +169,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding:.5px;
+  padding: 0.5px;
   box-sizing: border-box;
 }
 
