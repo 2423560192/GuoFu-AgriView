@@ -1,30 +1,49 @@
 <template>
-  <div class="chart-wrapper">
+  <div class="chart-container">
     <div class="chart-title">各村2024年粮食播种面积</div>
-    <div class="fixed-height-container">
-      <div ref="chart" class="chart"></div>
-    </div>
+    <div ref="chartRef" class="echarts-container"></div>
   </div>
 </template>
 
 <script>
-import { grainProductionData } from '../../data/agricultural-data.js'
+import * as echarts from 'echarts'
 
 export default {
   name: 'GrainVillage',
   data() {
     return {
-      chart: null
+      chart: null,
+      villageData: [
+        { name: '龙泉村', value: 5358.2 },
+        { name: '梅子村', value: 5297.1 },
+        { name: '高庙村', value: 4853.2 },
+        { name: '骑龙村', value: 4722.1 },
+        { name: '平等村', value: 4469.2 },
+        { name: '同心村', value: 4457.2 },
+        { name: '人和村', value: 4269.2 },
+        { name: '五星村', value: 4039.6 },
+        { name: '长岭村', value: 3935.1 },
+        { name: '三塘村', value: 3884.2 },
+        { name: '双山村', value: 3774.2 },
+        { name: '古松村', value: 3696.2 },
+        { name: '永胜村', value: 3459.1 },
+        { name: '团结村', value: 3442.2 },
+        { name: '建新村', value: 3357.1 },
+        { name: '翻身村', value: 3257.6 },
+        { name: '狮子村', value: 2849.1 },
+        { name: '银盆村', value: 2532.1 },
+        { name: '龙台村', value: 2481.1 },
+        { name: '安平村', value: 2309.1 },
+        { name: '垮山村', value: 2240.1 }
+      ]
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      this.initChart()
-    })
-    window.addEventListener('resize', this.handleResize)
+    this.initChart()
+    window.addEventListener('resize', this.resizeChart)
   },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.handleResize)
+  beforeUnmount() {
+    window.removeEventListener('resize', this.resizeChart)
     if (this.chart) {
       this.chart.dispose()
       this.chart = null
@@ -32,30 +51,27 @@ export default {
   },
   methods: {
     initChart() {
+      this.chart = echarts.init(this.$refs.chartRef)
+      this.updateChart()
+    },
+    
+    updateChart() {
+      if (!this.chart) return
+      
       // 对数据进行排序（从大到小）
-      const sortedData = [...grainProductionData.villageData2024].sort((a, b) => b.area - a.area)
+      const sortedData = [...this.villageData].sort((a, b) => b.value - a.value)
       
-      // 将数据转换为适合垂直条形图的格式
-      const villages = sortedData.map(item => item.village)
-      const areas = sortedData.map(item => item.area)
+      // 提取村名和数值为单独数组
+      const villageNames = sortedData.map(item => item.name)
+      const villageValues = sortedData.map(item => item.value)
       
-      // 设置固定高度为500px，确保可以容纳所有村庄数据
-      this.$refs.chart.style.height = '500px';
-      
-      // 获取容器宽度决定是否显示完整村名
-      const containerWidth = this.$el.clientWidth
-      const showFullName = containerWidth > 350
-      
-      this.chart = this.$echarts.init(this.$refs.chart)
       const option = {
         tooltip: {
           trigger: 'axis',
-          formatter: '{b}<br/>播种面积: {c} 亩',
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          borderColor: 'rgba(255, 255, 255, 0.2)',
-          textStyle: {
-            color: '#fff'
-          }
+          axisPointer: {
+            type: 'shadow'
+          },
+          formatter: '{b}: {c} 亩'
         },
         grid: {
           left: '3%',
@@ -68,7 +84,7 @@ export default {
           type: 'value',
           axisLabel: {
             color: '#fff',
-            formatter: '{value} 亩'
+            fontSize: 10
           },
           axisLine: {
             lineStyle: {
@@ -83,53 +99,49 @@ export default {
         },
         yAxis: {
           type: 'category',
-          data: villages,
+          data: villageNames,
           axisLabel: {
             color: '#fff',
-            // 根据容器宽度决定是否显示完整村名
-            formatter: function(value) {
-              if (!showFullName && value.length > 3) {
-                return value.substring(0, 3);
-              }
-              return value;
-            }
+            fontSize: 11,
+            interval: 0,
+            width: 80,
+            overflow: 'truncate'
           },
           axisLine: {
             lineStyle: {
               color: 'rgba(255, 255, 255, 0.3)'
             }
-          },
-          splitLine: {
-            show: false
           }
         },
         series: [
           {
             name: '播种面积',
             type: 'bar',
-            data: areas,
             barWidth: '60%',
+            data: villageValues,
             itemStyle: {
-              color: new this.$echarts.graphic.LinearGradient(1, 0, 0, 0, [
+              color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
                 { offset: 0, color: '#4cd5ce' },
-                { offset: 1, color: '#43aa8b' }
+                { offset: 1, color: '#16a6b5' }
               ])
             },
             label: {
               show: true,
               position: 'right',
-              color: '#fff',
-              formatter: '{c} 亩'
+              formatter: '{c} 亩',
+              fontSize: 11,
+              color: '#fff'
             }
           }
         ]
       }
+      
       this.chart.setOption(option)
     },
-    handleResize() {
+    
+    resizeChart() {
       if (this.chart) {
         this.chart.resize()
-        this.initChart()  // 重新初始化以适应容器大小变化
       }
     }
   }
@@ -137,53 +149,40 @@ export default {
 </script>
 
 <style scoped>
-.chart-wrapper {
-  height: 100%;
+.chart-container {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 5px;
+  padding: 5px 0 0 0;
   box-sizing: border-box;
 }
 
 .chart-title {
-  font-size: 14px;
-  color: #fff;
   text-align: center;
-  margin-bottom: 5px;
-  flex-shrink: 0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 5px 0 15px 0;
 }
 
-/* 固定高度的容器 */
-.fixed-height-container {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  margin-right: -4px; /* 补偿滚动条宽度 */
-}
-
-.fixed-height-container::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-.fixed-height-container::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
-}
-
-.fixed-height-container::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
-}
-
-.chart {
+.echarts-container {
   width: 100%;
+  flex: 1;
+  position: relative;
 }
 
 @media screen and (max-width: 768px) {
   .chart-title {
-    font-size: 12px;
+    font-size: 15px;
+    margin: 5px 0 10px 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .chart-title {
+    font-size: 14px;
+    margin: 3px 0 8px 0;
   }
 }
 </style> 
