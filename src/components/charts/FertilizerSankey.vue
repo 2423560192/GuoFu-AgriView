@@ -11,165 +11,125 @@ export default {
   data() {
     return {
       chart: null,
+      fertilizers: ['氮肥', '磷肥', '钾肥', '复合肥'],
+      years: ['2021年', '2022年', '2023年', '2024年'],
       fertilizerData: {
-        '2021': {
-          '氮肥': 1006.98,
-          '磷肥': 591.99,
-          '钾肥': 158.00,
-          '复合肥': 620.84
-        },
-        '2022': {
-          '氮肥': 2508.65,
-          '磷肥': 5608.58,
-          '钾肥': 301.95,
-          '复合肥': 1755.43
-        },
-        '2023': {
-          '氮肥': 2500.03,
-          '磷肥': 3670.31,
-          '钾肥': 285.05,
-          '复合肥': 1505.02
-        },
-        '2024': {
-          '氮肥': 2498.20,
-          '磷肥': 3676.38,
-          '钾肥': 285.80,
-          '复合肥': 1515.63
-        }
+        '氮肥': [1006.98, 2508.65, 2500.03, 2498.20],
+        '磷肥': [591.99, 5608.58, 3670.31, 3676.38],
+        '钾肥': [158.00, 301.95, 285.05, 285.80],
+        '复合肥': [620.84, 1755.43, 1505.02, 1515.63]
+      },
+      colors: {
+        '氮肥': '#4cd5ce',
+        '磷肥': '#43aa8b',
+        '钾肥': '#f9c74f', 
+        '复合肥': '#f94144'
       }
-    }
+    };
   },
   mounted() {
-    this.initChart()
-    window.addEventListener('resize', this.handleResize)
+    this.initChart();
+    window.addEventListener('resize', this.handleResize);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.handleResize)
     if (this.chart) {
-      this.chart.dispose()
-      this.chart = null
+      this.chart.dispose();
+      this.chart = null;
     }
+    window.removeEventListener('resize', this.handleResize);
   },
   methods: {
     initChart() {
-      this.chart = this.$echarts.init(this.$refs.chart)
-      
-      // 准备桑基图的节点和链接数据
-      const years = ['2021', '2022', '2023', '2024']
-      const fertilizerTypes = ['氮肥', '磷肥', '钾肥', '复合肥']
-      
-      let nodes = []
-      let links = []
-      
-      // 添加年份节点
-      years.forEach(year => {
-        nodes.push({
-          name: year + '年',
-          itemStyle: {
-            color: '#f9c74f'
-          }
-        })
-      })
-      
-      // 添加肥料类型节点
-      fertilizerTypes.forEach(type => {
-        nodes.push({
-          name: type,
-          itemStyle: {
-            color: this.getFertilizerColor(type)
-          }
-        })
-      })
-      
-      // 添加连接
-      for (let i = 0; i < years.length - 1; i++) {
-        const currentYear = years[i]
-        const nextYear = years[i + 1]
-        
-        fertilizerTypes.forEach(type => {
-          links.push({
-            source: currentYear + '年',
-            target: nextYear + '年',
-            value: this.fertilizerData[currentYear][type],
-            lineStyle: {
-              color: this.getFertilizerColor(type),
-              opacity: 0.3
-            }
-          })
-        })
-      }
-      
-      // 从最后一年连接到化肥类型
-      fertilizerTypes.forEach(type => {
-        links.push({
-          source: '2024年',
-          target: type,
-          value: this.fertilizerData['2024'][type],
-          lineStyle: {
-            color: this.getFertilizerColor(type),
-            opacity: 0.7
-          }
-        })
-      })
-      
-      const option = {
-        tooltip: {
-          trigger: 'item',
-          triggerOn: 'mousemove',
-          formatter: params => {
-            if (params.dataType === 'edge') {
-              return `${params.data.source} -> ${params.data.target}: ${params.data.value.toFixed(2)} 吨`
-            }
-            return params.name
-          }
-        },
-        series: [
-          {
-            type: 'sankey',
-            left: '5%',
-            right: '5%',
-            top: '10%',
-            bottom: '5%',
-            emphasis: {
-              focus: 'adjacency'
-            },
-            nodeAlign: 'left',
-            layoutIterations: 0,
-            draggable: false,
-            label: {
-              color: '#fff',
-              position: 'right',
-              fontSize: 12
-            },
-            lineStyle: {
-              color: 'gradient',
-              curveness: 0.5
-            },
-            data: nodes,
-            links: links
-          }
-        ]
-      }
-      
-      this.chart.setOption(option)
-    },
-    getFertilizerColor(type) {
-      const colorMap = {
-        '氮肥': '#f94144',
-        '磷肥': '#f3722c',
-        '钾肥': '#90be6d',
-        '复合肥': '#43aa8b'
-      }
-      
-      return colorMap[type] || '#f9c74f'
+      this.chart = this.$echarts.init(this.$refs.chart);
+      this.updateChart();
     },
     handleResize() {
       if (this.chart) {
-        this.chart.resize()
+        this.chart.resize();
       }
+    },
+    updateChart() {
+      // 构建桑基图所需的节点和链接数据
+      const nodes = [];
+      const links = [];
+      
+      // 生成所有节点（年份+肥料类型）
+      this.years.forEach((year, yearIndex) => {
+        this.fertilizers.forEach((fertilizer) => {
+          nodes.push({
+            name: `${year}-${fertilizer}`,
+            value: this.fertilizerData[fertilizer][yearIndex],
+            itemStyle: {
+              color: this.colors[fertilizer]
+            }
+          });
+        });
+      });
+      
+      // 生成年份之间的链接
+      for (let yearIndex = 0; yearIndex < this.years.length - 1; yearIndex++) {
+        this.fertilizers.forEach((fertilizer) => {
+          const source = `${this.years[yearIndex]}-${fertilizer}`;
+          const target = `${this.years[yearIndex + 1]}-${fertilizer}`;
+          const value = this.fertilizerData[fertilizer][yearIndex + 1];
+          
+          links.push({
+            source,
+            target,
+            value,
+            lineStyle: {
+              color: this.colors[fertilizer],
+              opacity: 0.7
+            }
+          });
+        });
+      }
+      
+      const option = {
+        title: {
+          show: false
+        },
+        tooltip: {
+          trigger: 'item',
+          triggerOn: 'mousemove',
+          formatter: '{b}: {c} 吨'
+        },
+        series: [{
+          type: 'sankey',
+          left: 50,
+          right: 50,
+          data: nodes,
+          links: links,
+          nodeAlign: 'justify',
+          orient: 'horizontal',
+          draggable: false,
+          label: {
+            position: 'top',
+            formatter: (params) => {
+              const parts = params.name.split('-');
+              return parts[1];
+            },
+            color: '#fff',
+            fontSize: 11
+          },
+          lineStyle: {
+            curveness: 0.5,
+            opacity: 0.7
+          },
+          emphasis: {
+            focus: 'adjacency',
+            lineStyle: {
+              opacity: 1
+            }
+          },
+          layoutIterations: 64
+        }]
+      };
+      
+      this.chart.setOption(option);
     }
   }
-}
+};
 </script>
 
 <style scoped>

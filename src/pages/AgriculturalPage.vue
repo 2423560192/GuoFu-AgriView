@@ -8,45 +8,76 @@
       <div class="date">{{ currentDate }}</div>
     </div>
     
-    <!-- 主要内容区域 -->
-    <div class="content">
+    <!-- 主要内容区域（固定高度，无滚动） -->
+    <div class="content-fixed">
       <!-- 数据概览 -->
-      <div class="overview-section fade-in-up">
+      <div class="overview-section">
         <AgriculturalOverview />
       </div>
       
-      <!-- 农业化肥使用量数据部分 -->
-      <div class="section fade-in-up" style="animation-delay: 0.2s;">
-        <div class="section-header">
-          <span class="section-title">农用化肥施用量分析</span>
+      <!-- 图表主区域 -->
+      <div class="charts-main-container">
+        <!-- 左侧图表区 -->
+        <div class="charts-left">
+          <div class="chart-item">
+            <div class="chart-header">
+              <span class="chart-title">农用化肥施用趋势</span>
+            </div>
+            <div class="chart-content">
+              <FertilizerTrend />
+            </div>
+          </div>
+          
+          <div class="chart-item">
+            <div class="chart-header">
+              <span class="chart-title">各村化肥使用量</span>
+            </div>
+            <div class="chart-content">
+              <FertilizerVillage />
+            </div>
+          </div>
         </div>
-        <div class="charts-container">
-          <div class="chart-box wide">
-            <FertilizerTrend />
+        
+        <!-- 右侧图表区 -->
+        <div class="charts-right">
+          <div class="chart-row">
+            <div class="chart-item small">
+              <div class="chart-header">
+                <span class="chart-title">化肥类型分布</span>
+              </div>
+              <div class="chart-content">
+                <FertilizerPie />
+              </div>
+            </div>
+            
+            <div class="chart-item small">
+              <div class="chart-header">
+                <span class="chart-title">化肥使用流向</span>
+              </div>
+              <div class="chart-content">
+                <FertilizerSankey />
+              </div>
+            </div>
           </div>
-          <div class="chart-box">
-            <FertilizerPie />
-          </div>
-          <div class="chart-box">
-            <FertilizerSankey />
-          </div>
-          <div class="chart-box wide">
-            <FertilizerVillage />
-          </div>
-        </div>
-      </div>
-      
-      <!-- 其他农业生产消耗量数据部分 -->
-      <div class="section fade-in-up" style="animation-delay: 0.4s;">
-        <div class="section-header">
-          <span class="section-title">其他农业生产消耗分析</span>
-        </div>
-        <div class="charts-container">
-          <div class="chart-box">
-            <OtherConsumptionTable />
-          </div>
-          <div class="chart-box wide">
-            <OtherConsumptionVillage />
+          
+          <div class="chart-row">
+            <div class="chart-item small">
+              <div class="chart-header">
+                <span class="chart-title">农业生产消耗表</span>
+              </div>
+              <div class="chart-content">
+                <OtherConsumptionTable />
+              </div>
+            </div>
+            
+            <div class="chart-item small">
+              <div class="chart-header">
+                <span class="chart-title">各村农业消耗量</span>
+              </div>
+              <div class="chart-content">
+                <OtherConsumptionVillage />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -85,10 +116,12 @@ export default {
 
 <style scoped>
 .page-container {
-  flex: 1;
   display: flex;
   flex-direction: column;
+  height: 100vh;
   overflow: hidden;
+  background-color: rgba(10, 20, 35, 0.95);
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjMGYxYzMwIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaIiBzdHJva2U9IiMxYTMwNTkiIHN0cm9rZS13aWR0aD0iMSI+PC9wYXRoPgo8L3N2Zz4=');
 }
 
 .header {
@@ -126,28 +159,6 @@ export default {
   margin: 0;
   z-index: 1;
   letter-spacing: 2px;
-  position: relative;
-  overflow: hidden;
-}
-
-.title::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    rgba(255,255,255,0) 0%, 
-    rgba(255,255,255,0.2) 50%, 
-    rgba(255,255,255,0) 100%);
-  animation: shine 3s infinite;
-}
-
-@keyframes shine {
-  0% { left: -100%; }
-  20% { left: 100%; }
-  100% { left: 100%; }
 }
 
 .date {
@@ -162,86 +173,115 @@ export default {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.content {
-  flex: 1;
+/* 固定高度内容区 */
+.content-fixed {
   display: flex;
   flex-direction: column;
-  padding: 15px;
-  overflow-y: auto;
-  gap: 20px;
-  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjMGYxYzMwIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaIiBzdHJva2U9IiMxYTMwNTkiIHN0cm9rZS13aWR0aD0iMSI+PC9wYXRoPgo8L3N2Zz4=');
+  height: calc(100vh - 60px);
+  padding: 10px;
+  gap: 10px;
 }
 
+/* 概览区域 */
 .overview-section {
-  margin-bottom: 5px;
+  height: 100px;
+  flex-shrink: 0;
 }
 
-.section {
+/* 主图表容器 */
+.charts-main-container {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  height: calc(100% - 110px);
+}
+
+/* 左侧图表区 */
+.charts-left {
+  width: 50%;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.section-header {
-  height: 36px;
+/* 右侧图表区 */
+.charts-right {
+  width: 50%;
   display: flex;
-  align-items: center;
-  padding-left: 15px;
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 5px;
-  border-left: 4px solid #f9c74f;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.section-title {
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff;
-}
-
-.charts-container {
+/* 图表行 */
+.chart-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
+  flex: 1;
+  gap: 10px;
 }
 
-.chart-box {
+/* 图表项 */
+.chart-item {
   background-color: rgba(15, 28, 48, 0.6);
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-  height: 320px;
-  flex: 1;
-  min-width: 320px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
 }
 
-.chart-box.wide {
-  flex: 2;
-  min-width: 450px;
+.chart-item.small {
+  flex: 1;
 }
 
+/* 图表标题 */
+.chart-header {
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #f9c74f;
+}
+
+/* 图表内容 */
+.chart-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 响应式处理 */
 @media screen and (max-width: 1200px) {
-  .chart-box, .chart-box.wide {
-    flex: 100%;
-    min-width: 100%;
+  .charts-main-container {
+    flex-direction: column;
   }
   
-  .chart-box {
-    height: 300px;
+  .charts-left, .charts-right {
+    width: 100%;
+  }
+  
+  .overview-section {
+    height: 180px;
+  }
+  
+  .content-fixed {
+    height: auto;
+    overflow-y: auto;
+  }
+  
+  .chart-item {
+    height: 250px;
   }
 }
 
-@media screen and (max-width: 768px) {
-  .title {
-    font-size: 20px;
-  }
-  
-  .chart-box {
-    height: 280px;
-  }
-}
-
-/* 添加动画效果 */
+/* 动画效果 */
 .pulse-slow {
   animation: pulse-slow 3s infinite ease-in-out;
 }
@@ -250,20 +290,5 @@ export default {
   0% { transform: scale(1); }
   50% { transform: scale(1.1); }
   100% { transform: scale(1); }
-}
-
-.fade-in-up {
-  animation: fade-in-up 0.8s ease-out both;
-}
-
-@keyframes fade-in-up {
-  0% {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
 }
 </style> 

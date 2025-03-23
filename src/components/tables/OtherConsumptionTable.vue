@@ -1,62 +1,32 @@
 <template>
-  <div class="chart-wrapper">
-    <div class="chart-title">2021-2024年其他农业生产消耗量</div>
-    <div class="table-container">
-      <el-table
-        :data="tableData"
-        style="width: 100%"
-        :header-cell-style="tableHeaderStyle"
-        :cell-style="tableCellStyle"
-        size="mini"
-        border>
-        <el-table-column prop="category" label="消耗类别" min-width="140"></el-table-column>
-        <el-table-column prop="unit" label="单位" width="80" align="center"></el-table-column>
-        <el-table-column prop="2024" label="2024年" min-width="100" align="right">
-          <template slot-scope="scope">
-            <div class="value-cell">
-              <div v-if="scope.row['2024'] > 0" 
-                   class="value-bar" 
-                   :style="{width: getBarWidth(scope.row, '2024') + '%', backgroundColor: getBarColor(scope.row.category)}">
-              </div>
-              <span class="value-text">{{ scope.row['2024'] }}</span>
+  <div class="table-wrapper">
+    <table class="consumption-table">
+      <thead>
+        <tr>
+          <th class="item-col">项目</th>
+          <th class="unit-col">单位</th>
+          <th v-for="year in years" :key="year">{{ year }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in tableData" :key="index">
+          <td class="item-name">{{ item.name }}</td>
+          <td class="unit">{{ item.unit }}</td>
+          <td v-for="(value, yearIndex) in item.values" :key="yearIndex" class="value-cell">
+            <div class="value-content">
+              <div 
+                class="value-bar" 
+                :style="{ 
+                  width: getBarWidth(value), 
+                  backgroundColor: getBarColor(index)
+                }"
+              ></div>
+              <span class="value-text">{{ formatNumber(value) }}</span>
             </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="2023" label="2023年" min-width="100" align="right">
-          <template slot-scope="scope">
-            <div class="value-cell">
-              <div v-if="scope.row['2023'] > 0" 
-                   class="value-bar" 
-                   :style="{width: getBarWidth(scope.row, '2023') + '%', backgroundColor: getBarColor(scope.row.category)}">
-              </div>
-              <span class="value-text">{{ scope.row['2023'] }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="2022" label="2022年" min-width="100" align="right">
-          <template slot-scope="scope">
-            <div class="value-cell">
-              <div v-if="scope.row['2022'] > 0" 
-                   class="value-bar" 
-                   :style="{width: getBarWidth(scope.row, '2022') + '%', backgroundColor: getBarColor(scope.row.category)}">
-              </div>
-              <span class="value-text">{{ scope.row['2022'] }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="2021" label="2021年" min-width="100" align="right">
-          <template slot-scope="scope">
-            <div class="value-cell">
-              <div v-if="scope.row['2021'] > 0" 
-                   class="value-bar" 
-                   :style="{width: getBarWidth(scope.row, '2021') + '%', backgroundColor: getBarColor(scope.row.category)}">
-              </div>
-              <span class="value-text">{{ scope.row['2021'] }}</span>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -65,184 +35,160 @@ export default {
   name: 'OtherConsumptionTable',
   data() {
     return {
+      years: ['2021年', '2022年', '2023年', '2024年'],
       tableData: [
-        { 
-          category: '农用塑料薄膜使用量', 
+        {
+          name: '农用塑料薄膜使用量',
           unit: '千克',
-          '2024': 37306.56, 
-          '2023': 37306.56, 
-          '2022': 37451, 
-          '2021': 37599
+          values: [37599, 37451, 37306.56, 37306.56]
         },
-        { 
-          category: '地膜覆盖面积', 
+        {
+          name: '地膜覆盖面积',
           unit: '亩',
-          '2024': 9245.48, 
-          '2023': 9245.48, 
-          '2022': 9264, 
-          '2021': 9283
+          values: [9283, 9264, 9245.48, 9245.48]
         },
-        { 
-          category: '农用柴油使用量', 
+        {
+          name: '农用柴油使用量',
           unit: '千克',
-          '2024': 75396.6, 
-          '2023': 75396.6, 
-          '2022': 75137, 
-          '2021': 74873 
+          values: [74873, 75137, 75396.60, 75396.60]
         },
-        { 
-          category: '农药使用量', 
+        {
+          name: '农药使用量',
           unit: '千克',
-          '2024': 0, 
-          '2023': 22808.56, 
-          '2022': 22831, 
-          '2021': 22854
+          values: [22854, 22831, 22808.56, 0]
         }
       ],
-      maxValues: {
-        '农用塑料薄膜使用量': 40000,
-        '地膜覆盖面积': 10000,
-        '农用柴油使用量': 80000,
-        '农药使用量': 25000
-      },
-      colorMap: {
-        '农用塑料薄膜使用量': 'rgba(249, 199, 79, 0.7)',
-        '地膜覆盖面积': 'rgba(144, 190, 109, 0.7)',
-        '农用柴油使用量': 'rgba(67, 170, 139, 0.7)',
-        '农药使用量': 'rgba(77, 144, 142, 0.7)'
-      }
-    }
+      colors: ['#43aa8b', '#90be6d', '#f9c74f', '#f3722c'],
+      maxValue: 0
+    };
+  },
+  created() {
+    // 计算所有数据中的最大值
+    this.maxValue = this.getOverallMaxValue();
   },
   methods: {
-    tableHeaderStyle() {
-      return {
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
-        color: '#fff',
-        fontWeight: 'bold',
-        padding: '5px 0',
-        fontSize: '12px'
-      }
+    formatNumber(num) {
+      return num.toLocaleString('zh-CN', {
+        minimumFractionDigits: num % 1 === 0 ? 0 : 2,
+        maximumFractionDigits: 2
+      });
     },
-    tableCellStyle({row, column}) {
-      return {
-        backgroundColor: 'transparent',
-        color: column.property === 'category' ? '#f9c74f' : '#fff',
-        padding: '3px',
-        fontSize: '12px'
-      }
+    getOverallMaxValue() {
+      let max = 0;
+      this.tableData.forEach(item => {
+        const rowMax = Math.max(...item.values);
+        if (rowMax > max) {
+          max = rowMax;
+        }
+      });
+      return max;
     },
-    getBarWidth(row, year) {
-      if (row[year] <= 0) return 0;
-      const maxValue = this.maxValues[row.category] || 100000;
-      return (row[year] / maxValue) * 100;
+    getBarWidth(value) {
+      // 使用整个表格的最大值作为基准
+      const percentage = (value / this.maxValue) * 100;
+      return `${Math.max(percentage, 3)}%`;
     },
-    getBarColor(category) {
-      return this.colorMap[category] || 'rgba(249, 199, 79, 0.7)';
+    getBarColor(index) {
+      return this.colors[index % this.colors.length];
     }
   }
-}
+};
 </script>
 
 <style scoped>
-.chart-wrapper {
-  height: 100%;
+.table-wrapper {
   width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: column;
-  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
   box-sizing: border-box;
-}
-
-.chart-title {
-  font-size: 14px;
-  color: #fff;
-  text-align: center;
-  margin-bottom: 5px;
-  flex-shrink: 0;
-}
-
-.table-container {
-  flex: 1;
   overflow: auto;
-  min-height: 150px;
+}
+
+.consumption-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+  font-size: 14px;
+}
+
+.consumption-table th {
+  padding: 8px 12px;
+  text-align: left;
+  background-color: rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.consumption-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.consumption-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.item-col {
+  width: 25%;
+}
+
+.unit-col {
+  width: 10%;
+}
+
+.item-name {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.unit {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
 }
 
 .value-cell {
   position: relative;
-  height: 20px;
+}
+
+.value-content {
+  position: relative;
+  height: 24px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
 }
 
 .value-bar {
   position: absolute;
-  height: 70%;
   left: 0;
+  top: 0;
+  height: 100%;
   border-radius: 2px;
+  opacity: 0.3;
   z-index: 0;
+  transition: width 0.5s ease;
 }
 
 .value-text {
   position: relative;
   z-index: 1;
-  padding-right: 5px;
+  padding-left: 4px;
 }
 
-:deep(.el-table) {
-  background-color: transparent !important;
-  color: #fff !important;
-}
-
-:deep(.el-table__header-wrapper), 
-:deep(.el-table__body-wrapper), 
-:deep(.el-table__footer-wrapper) {
-  background-color: transparent !important;
-}
-
-:deep(.el-table__inner-wrapper),
-:deep(.el-table__header),
-:deep(.el-table__body),
-:deep(.el-table__footer) {
-  background-color: transparent !important;
-}
-
-:deep(.el-table::before) {
-  display: none;
-}
-
-:deep(.el-table--border) {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-:deep(.el-table--border::after) {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-:deep(.el-table--border th), :deep(.el-table--border td) {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-:deep(.el-table--border td), :deep(.el-table--border th) {
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-:deep(.el-table--enable-row-hover .el-table__body tr:hover > td) {
-  background-color: rgba(76, 213, 206, 0.1) !important;
-}
-
-:deep(.el-table .cell) {
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-@media screen and (max-width: 480px) {
-  .chart-title {
+@media screen and (max-width: 768px) {
+  .consumption-table {
     font-size: 12px;
   }
   
-  .table-container {
-    min-height: 120px;
+  .consumption-table th,
+  .consumption-table td {
+    padding: 6px 8px;
+  }
+  
+  .value-content {
+    height: 20px;
   }
 }
 </style> 
