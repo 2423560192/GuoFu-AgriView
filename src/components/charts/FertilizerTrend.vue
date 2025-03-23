@@ -1,17 +1,22 @@
 <template>
   <div class="chart-wrapper">
-    <div ref="chart" class="chart"></div>
+    <div class="chart-title">2021-2024年农用化肥施用量趋势</div>
+    <div ref="chart" class="chart-container"></div>
   </div>
 </template>
 
 <script>
-import { agriculturalConditionsData } from '../../data/agricultural-data.js'
-
 export default {
   name: 'FertilizerTrend',
   data() {
     return {
-      chart: null
+      chart: null,
+      fertilizerData: [
+        { year: '2021', value: 2377.81 },
+        { year: '2022', value: 10174.62 },
+        { year: '2023', value: 7960.42 },
+        { year: '2024', value: 7976.01 }
+      ]
     }
   },
   mounted() {
@@ -22,48 +27,53 @@ export default {
     window.removeEventListener('resize', this.handleResize)
     if (this.chart) {
       this.chart.dispose()
+      this.chart = null
     }
   },
   methods: {
     initChart() {
       this.chart = this.$echarts.init(this.$refs.chart)
+      
+      const years = this.fertilizerData.map(item => item.year)
+      const values = this.fertilizerData.map(item => item.value)
+      
       const option = {
-        title: {
-          text: '2021-2024年化肥用量趋势',
-          textStyle: {
-            color: '#fff',
-            fontSize: 14
-          },
-          left: 'center'
-        },
         tooltip: {
-          trigger: 'axis'
+          trigger: 'axis',
+          formatter: '{b}年<br/>农用化肥施用量: {c} 吨'
         },
         grid: {
           left: '3%',
           right: '4%',
           bottom: '3%',
+          top: '15%',
           containLabel: true
         },
         xAxis: {
           type: 'category',
-          data: agriculturalConditionsData.fertilizerUsage.years,
+          data: years,
           axisLine: {
             lineStyle: {
-              color: '#fff'
+              color: 'rgba(255, 255, 255, 0.3)'
             }
+          },
+          axisLabel: {
+            color: '#fff'
           }
         },
         yAxis: {
           type: 'value',
-          name: '用量(吨)',
+          name: '吨',
           nameTextStyle: {
-            color: '#fff'
+            color: 'rgba(255, 255, 255, 0.7)'
           },
           axisLine: {
             lineStyle: {
-              color: '#fff'
+              color: 'rgba(255, 255, 255, 0.3)'
             }
+          },
+          axisLabel: {
+            color: '#fff'
           },
           splitLine: {
             lineStyle: {
@@ -73,28 +83,60 @@ export default {
         },
         series: [
           {
-            name: '化肥用量',
+            name: '农用化肥施用量',
             type: 'line',
-            data: agriculturalConditionsData.fertilizerUsage.data,
+            data: values,
             smooth: true,
-            lineStyle: {
-              width: 3,
-              color: '#f94144'
-            },
             symbol: 'circle',
             symbolSize: 8,
             itemStyle: {
-              color: '#f94144'
+              color: '#f9c74f'
+            },
+            lineStyle: {
+              width: 4,
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 1,
+                y2: 0,
+                colorStops: [
+                  { offset: 0, color: '#f9c74f' },
+                  { offset: 1, color: '#f8961e' }
+                ]
+              }
             },
             areaStyle: {
-              color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: 'rgba(249, 65, 68, 0.8)' },
-                { offset: 1, color: 'rgba(249, 65, 68, 0.1)' }
-              ])
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: 'rgba(249, 199, 79, 0.4)' },
+                  { offset: 1, color: 'rgba(249, 199, 79, 0)' }
+                ]
+              }
+            },
+            emphasis: {
+              itemStyle: {
+                color: '#f8961e',
+                borderWidth: 2,
+                borderColor: '#fff'
+              }
+            },
+            label: {
+              show: true,
+              position: 'top',
+              formatter: '{c} 吨',
+              color: '#fff',
+              fontSize: 12
             }
           }
         ]
       }
+      
       this.chart.setOption(option)
     },
     handleResize() {
@@ -112,9 +154,26 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 5px;
+  box-sizing: border-box;
 }
 
-.chart {
+.chart-title {
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 5px;
+  flex-shrink: 0;
+}
+
+.chart-container {
   flex: 1;
+  width: 100%;
+}
+
+@media screen and (max-width: 480px) {
+  .chart-title {
+    font-size: 12px;
+  }
 }
 </style> 

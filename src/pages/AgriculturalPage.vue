@@ -10,14 +10,45 @@
     
     <!-- 主要内容区域 -->
     <div class="content">
-      <!-- 左侧地图 -->
-      <div class="map-container fade-in-up">
-        <RegionMap />
+      <!-- 数据概览 -->
+      <div class="overview-section fade-in-up">
+        <AgriculturalOverview />
       </div>
       
-      <!-- 右侧面板 -->
-      <div class="panel-container fade-in-up" style="animation-delay: 0.3s;">
-        <AgriculturalConditionsPanel />
+      <!-- 农业化肥使用量数据部分 -->
+      <div class="section fade-in-up" style="animation-delay: 0.2s;">
+        <div class="section-header">
+          <span class="section-title">农用化肥施用量分析</span>
+        </div>
+        <div class="charts-container">
+          <div class="chart-box wide">
+            <FertilizerTrend />
+          </div>
+          <div class="chart-box">
+            <FertilizerPie />
+          </div>
+          <div class="chart-box">
+            <FertilizerSankey />
+          </div>
+          <div class="chart-box wide">
+            <FertilizerVillage />
+          </div>
+        </div>
+      </div>
+      
+      <!-- 其他农业生产消耗量数据部分 -->
+      <div class="section fade-in-up" style="animation-delay: 0.4s;">
+        <div class="section-header">
+          <span class="section-title">其他农业生产消耗分析</span>
+        </div>
+        <div class="charts-container">
+          <div class="chart-box">
+            <OtherConsumptionTable />
+          </div>
+          <div class="chart-box wide">
+            <OtherConsumptionVillage />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -25,14 +56,24 @@
 
 <script>
 import { getCurrentDate } from '../data/agricultural-data.js'
-import RegionMap from '../components/charts/RegionMap.vue'
-import AgriculturalConditionsPanel from '../components/panels/AgriculturalConditionsPanel.vue'
+import FertilizerTrend from '../components/charts/FertilizerTrend.vue'
+import FertilizerSankey from '../components/charts/FertilizerSankey.vue'
+import FertilizerPie from '../components/charts/FertilizerPie.vue'
+import FertilizerVillage from '../components/charts/FertilizerVillage.vue'
+import OtherConsumptionTable from '../components/tables/OtherConsumptionTable.vue'
+import OtherConsumptionVillage from '../components/charts/OtherConsumptionVillage.vue'
+import AgriculturalOverview from '../components/overview/AgriculturalOverview.vue'
 
 export default {
   name: 'AgriculturalPage',
   components: {
-    RegionMap,
-    AgriculturalConditionsPanel
+    FertilizerTrend,
+    FertilizerSankey,
+    FertilizerPie,
+    FertilizerVillage,
+    OtherConsumptionTable,
+    OtherConsumptionVillage,
+    AgriculturalOverview
   },
   data() {
     return {
@@ -124,65 +165,79 @@ export default {
 .content {
   flex: 1;
   display: flex;
+  flex-direction: column;
   padding: 15px;
-  gap: 15px;
-  overflow: hidden;
+  overflow-y: auto;
+  gap: 20px;
   background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjMGYxYzMwIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaIiBzdHJva2U9IiMxYTMwNTkiIHN0cm9rZS13aWR0aD0iMSI+PC9wYXRoPgo8L3N2Zz4=');
 }
 
-.map-container {
-  flex: 1;
-  background-color: rgba(0, 0, 0, 0.2);
+.overview-section {
+  margin-bottom: 5px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-header {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  border-left: 4px solid #f9c74f;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.charts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.chart-box {
+  background-color: rgba(15, 28, 48, 0.6);
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-  position: relative;
+  height: 320px;
+  flex: 1;
+  min-width: 320px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.map-container::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, #4cd5ce, #43aa8b, #90be6d, #f9c74f, #f94144);
-  z-index: -1;
-  border-radius: 10px;
-  opacity: 0.3;
-  animation: border-glow 3s infinite alternate;
-}
-
-@keyframes border-glow {
-  0% { opacity: 0.2; }
-  100% { opacity: 0.5; }
-}
-
-.panel-container {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
+.chart-box.wide {
+  flex: 2;
+  min-width: 450px;
 }
 
 @media screen and (max-width: 1200px) {
-  .content {
-    flex-direction: column;
+  .chart-box, .chart-box.wide {
+    flex: 100%;
+    min-width: 100%;
   }
   
-  .panel-container {
-    width: 100%;
-  }
-  
-  .map-container {
-    height: 400px;
+  .chart-box {
+    height: 300px;
   }
 }
 
 @media screen and (max-width: 768px) {
   .title {
     font-size: 20px;
+  }
+  
+  .chart-box {
+    height: 280px;
   }
 }
 

@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import { grainProductionData } from '../../data/agricultural-data.js'
 
 export default {
   name: 'GrainCropsTable',
@@ -63,7 +62,7 @@ export default {
           '2023_area': 22386, '2023_yield': 9576,
           '2022_area': 22391, '2022_yield': 9625,
           '2021_area': 22390, '2021_yield': 9691
-        }
+        },
       ]
     }
   },

@@ -8,7 +8,7 @@ const routes = [
   {
     path: '/agricultural',
     name: 'Agricultural',
-    component: () => import('../pages/AgriculturalPage.vue')
+    component: () => import('../pages/Agricultural.vue')
   },
   {
     path: '/economic',
