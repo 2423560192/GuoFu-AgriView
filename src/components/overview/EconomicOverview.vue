@@ -23,28 +23,28 @@ export default {
     return {
       overviewData: [
         {
-          title: '总播种面积',
+          title: '2024年经济作物总播种面积',
           value: '51,524.5亩',
           trend: 2.3,
           icon: 'el-icon-s-grid',
           color: 'rgba(76, 213, 206, 0.8)'
         },
         {
-          title: '油料作物',
+          title: '2024年最多播种面积（作物）',
           value: '6,564亩',
           trend: 1.7,
           icon: 'el-icon-s-finance',
           color: 'rgba(144, 190, 109, 0.8)'
         },
         {
-          title: '蔬菜面积',
+          title: '2024年最多播种面积（村）',
           value: '32,658亩',
           trend: 4.5,
           icon: 'el-icon-s-data',
           color: 'rgba(76, 213, 206, 0.8)'
         },
         {
-          title: '作物品种',
+          title: '2024年总作物品种',
           value: '7种',
           trend: 0,
           icon: 'el-icon-s-operation',
