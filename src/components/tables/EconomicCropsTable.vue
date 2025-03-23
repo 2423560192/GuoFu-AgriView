@@ -1,21 +1,23 @@
 <template>
   <div class="table-wrapper">
     <div class="table-title">全镇2021-2024年各类经济作物总播种面积</div>
-    <el-table
-      :data="tableData"
-      style="width: 100%"
-      :header-cell-style="tableHeaderStyle"
-      :cell-style="tableCellStyle"
-      size="mini"
-      border
-      :max-height="180">
-      <el-table-column prop="index" label="序号" width="85" align="center"></el-table-column>
-      <el-table-column prop="category" label="各类经济作物" width="145"></el-table-column>
-      <el-table-column prop="2024" label="2024年面积(亩)" width="145" align="right"></el-table-column>
-      <el-table-column prop="2023" label="2023年面积(亩)" width="145" align="right"></el-table-column>
-      <el-table-column prop="2022" label="2022年面积(亩)" width="145" align="right"></el-table-column>
-      <el-table-column prop="2021" label="2021年面积(亩)" width="145" align="right"></el-table-column>
-    </el-table>
+    <div class="table-container">
+      <el-table
+        :data="tableData"
+        style="width: 100%; height: 100%"
+        :header-cell-style="tableHeaderStyle"
+        :cell-style="tableCellStyle"
+        size="mini"
+        height="100%"
+        border>
+        <el-table-column prop="index" label="序号" width="60" align="center"></el-table-column>
+        <el-table-column prop="category" label="各类经济作物" min-width="120"></el-table-column>
+        <el-table-column prop="2024" label="2024年面积(亩)" min-width="120" align="right"></el-table-column>
+        <el-table-column prop="2023" label="2023年面积(亩)" min-width="120" align="right"></el-table-column>
+        <el-table-column prop="2022" label="2022年面积(亩)" min-width="120" align="right"></el-table-column>
+        <el-table-column prop="2021" label="2021年面积(亩)" min-width="120" align="right"></el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -41,7 +43,8 @@ export default {
         background: '#1a3059',
         color: '#fff',
         fontSize: '12px',
-        padding: '5px 0'
+        padding: '5px 0',
+        textAlign: 'center'
       },
       tableCellStyle: {
         background: '#0c1f3e',
@@ -69,11 +72,32 @@ export default {
   color: #fff;
   text-align: center;
   margin-bottom: 5px;
+  flex-shrink: 0;
+}
+
+.table-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: calc(100% - 25px);
 }
 
 :deep(.el-table) {
   background-color: transparent !important;
   color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+:deep(.el-table__inner-wrapper) {
+  height: 100%;
+}
+
+:deep(.el-table__body-wrapper) {
+  overflow-y: auto !important;
 }
 
 :deep(.el-table), :deep(.el-table__fixed) {
@@ -91,11 +115,11 @@ export default {
 :deep(.el-table__header-wrapper th) {
   color: #fff;
   background-color: #1a3059 !important;
-  padding: 3px 0;
+  padding: 5px 0;
 }
 
 :deep(.el-table__body td) {
-  height: 28px;
+  height: 25px;
   padding: 2px 0;
 }
 
@@ -124,6 +148,14 @@ export default {
 
 :deep(.el-table__fixed-right::before), :deep(.el-table__fixed::before) {
   background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+:deep(.el-table td), :deep(.el-table th.is-leaf) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+:deep(.el-table--border td), :deep(.el-table--border th) {
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 :deep(.el-table .cell) {

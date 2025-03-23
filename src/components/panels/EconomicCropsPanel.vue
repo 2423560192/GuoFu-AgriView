@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="chart-row">
-        <div class="chart-container">
+        <div class="chart-container table-container">
           <EconomicCropsTable />
         </div>
         <div class="chart-container">
@@ -98,6 +98,10 @@ export default {
   flex-direction: column;
   overflow: hidden;
   padding: 5px;
+}
+
+.table-container {
+  padding: 10px 5px 5px 5px;
 }
 
 @media screen and (max-width: 768px) {
