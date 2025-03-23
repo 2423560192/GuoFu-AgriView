@@ -9,7 +9,7 @@
         <div class="card-value">{{ item.value }}</div>
         <div class="card-trend" :class="item.trend > 0 ? 'up' : 'down'">
           <i :class="item.trend > 0 ? 'el-icon-top' : 'el-icon-bottom'"></i>
-          <span>{{ Math.abs(item.trend) }}%</span>
+          <span class="trend-percentage">{{ Math.abs(item.trend) }}%</span>
         </div>
       </div>
     </div>
@@ -23,29 +23,29 @@ export default {
     return {
       overviewData: [
         {
-          title: '粮食总面积',
+          title: '2024年粮食生产总播种面积',
           value: '78,683亩',
           trend: 1.2,
           icon: 'el-icon-s-grid',
           color: 'rgba(249, 199, 79, 0.8)'
         },
         {
-          title: '粮食总产量',
+          title: '2024年粮食生产总产量',
           value: '34,833吨',
           trend: 0.9,
           icon: 'el-icon-s-data',
           color: 'rgba(248, 150, 30, 0.8)'
         },
         {
-          title: '谷物产量',
-          value: '21,450吨',
+          title: '2024年粮食最多播种面积',
+          value: '谷物 - 4,8459亩',
           trend: 1.5,
           icon: 'el-icon-s-finance',
           color: 'rgba(249, 199, 79, 0.8)'
         },
         {
-          title: '亩产水平',
-          value: '442.7公斤',
+          title: '2024年粮食最多产量',
+          value: '谷物 - 2,3906吨',
           trend: 0.3,
           icon: 'el-icon-s-marketing',
           color: 'rgba(248, 150, 30, 0.8)'
@@ -118,7 +118,7 @@ export default {
 }
 
 .card-title {
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 5px;
 }
@@ -147,6 +147,13 @@ export default {
 .card-trend i {
   margin-right: 5px;
 }
+
+.trend-percentage {
+  font-size: 16px;
+  font-weight: bold;
+  /* margin-left: 2px; */
+}
+
 
 @media screen and (max-width: 1200px) {
   .overview-container {
