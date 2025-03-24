@@ -64,60 +64,59 @@ export default {
   },
   methods: {
     initChart() {
-      this.chart = this.$echarts.init(this.$refs.chart);
-      this.updateChart();
-    },
-    handleResize() {
       if (this.chart) {
-        this.chart.resize();
+        this.chart.dispose();
       }
-    },
-    updateChart() {
-      // 从links数据中提取所有唯一节点名称
-      const nodeNames = new Set();
-      this.fertilizerData.forEach(link => {
-        nodeNames.add(link.source);
-        nodeNames.add(link.target);
+      
+      this.chart = this.$echarts.init(this.$refs.chart);
+      
+      // 处理钾肥相关的连接，使其显示更明显
+      const adjustedLinks = this.fertilizerData.map(link => {
+        // 钾肥连接加粗3倍，但保持原始数值
+        if (link.target === '钾肥') {
+          return {
+            source: link.source,
+            target: link.target,
+            value: link.value * 3  // 放大显示，但在提示框中仍显示原值
+          };
+        }
+        return link;
       });
       
-      // 转换为nodes数组，并手动设置年份节点的位置
+      // 直接设置节点位置，确保年份从上到下排列
       const nodes = [];
       
-      // 添加年份节点，指定位置
+      // 添加年份节点，使其从上到下垂直排列
       this.yearOrder.forEach((year, index) => {
         nodes.push({
           name: year,
-          itemStyle: {
-            color: this.colors[year]
-          },
-          // 固定节点的坐标 - 左侧垂直排列
-          // x坐标设为0（最左侧），y坐标按比例分布
-          x: 0,
-          y: index * (1 / (this.yearOrder.length - 1)),
-          fixed: true
+          itemStyle: { color: this.colors[year] },
+          x: 0.05,  // 左侧5%位置
+          y: 0.1 + index * 0.2,  // 垂直分布
+          fixed: true,  // 固定位置
+          value: year  // 用于tooltip显示
         });
       });
       
       // 添加肥料类型节点
-      this.fertilizerOrder.forEach(fertilizer => {
+      this.fertilizerOrder.forEach((fertilizer, index) => {
         nodes.push({
           name: fertilizer,
-          itemStyle: {
-            color: this.colors[fertilizer]
-          }
+          itemStyle: { color: this.colors[fertilizer] }
         });
       });
       
       const option = {
-        title: {
-          show: false
-        },
         tooltip: {
           trigger: 'item',
           triggerOn: 'mousemove',
           formatter: params => {
             if (params.dataType === 'edge') {
-              return `${params.data.source} → ${params.data.target}: ${params.value.toFixed(2)} 吨`;
+              // 查找原始链接值
+              const original = this.fertilizerData.find(
+                link => link.source === params.data.source && link.target === params.data.target
+              );
+              return `${params.data.source} → ${params.data.target}: ${original ? original.value.toFixed(2) : params.data.value.toFixed(2)} 吨`;
             }
             return params.name;
           }
@@ -125,15 +124,18 @@ export default {
         series: [{
           type: 'sankey',
           left: '5%',
-          right: '20%',
+          right: '5%',
           top: '5%',
           bottom: '5%',
-          data: nodes,
-          links: this.fertilizerData,
-          nodeAlign: 'justify',
+          nodeWidth: 20,
+          nodeGap: 12,
+          layoutIterations: 0,  // 禁用自动布局
           orient: 'horizontal',
-          draggable: false,
-          layoutIterations: 0, // 禁用自动布局迭代，使用固定位置
+          emphasis: {
+            focus: 'adjacency'
+          },
+          data: nodes,
+          links: adjustedLinks,
           label: {
             position: 'right',
             color: '#fff',
@@ -142,22 +144,21 @@ export default {
           lineStyle: {
             color: 'gradient',
             curveness: 0.5,
-            opacity: 0.6
+            opacity: 0.7
           },
           itemStyle: {
             borderWidth: 1,
             borderColor: '#333'
-          },
-          emphasis: {
-            focus: 'adjacency',
-            lineStyle: {
-              opacity: 0.9
-            }
           }
         }]
       };
       
       this.chart.setOption(option);
+    },
+    handleResize() {
+      if (this.chart) {
+        this.chart.resize();
+      }
     }
   }
 };
@@ -169,7 +170,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0.5px;
+  padding: 5px;
   box-sizing: border-box;
 }
 
@@ -184,6 +185,7 @@ export default {
 .chart-container {
   flex: 1;
   width: 100%;
+  min-height: 250px; /* 确保图表有足够的高度 */
 }
 
 @media screen and (max-width: 480px) {
