@@ -1,13 +1,13 @@
 <template>
   <div class="table-wrapper">
-    <div class="table-header">农业生产消耗表</div>
+    <div class="table-header">2021-2024其他农业生产消耗量表格</div>
     <div class="table-scroll-container">
       <table class="consumption-table">
         <thead>
           <tr>
             <th class="item-col">项目</th>
             <th class="unit-col">单位</th>
-            <th v-for="year in years" :key="year">{{ year }}</th>
+            <th v-for="year in years" :key="year" class="year-col">{{ year }}</th>
           </tr>
         </thead>
         <tbody>
@@ -23,7 +23,7 @@
                     backgroundColor: getBarColor(index)
                   }"
                 ></div>
-                <span class="value-text">{{ formatNumber(value) }}</span>
+                <span class="value-text">{{ formatValueDisplay(value) }}</span>
               </div>
             </td>
           </tr>
@@ -38,36 +38,46 @@ export default {
   name: 'OtherConsumptionTable',
   data() {
     return {
-      years: ['2021年', '2022年', '2023年', '2024年'],
+      // 年份从新到旧排列
+      years: ['2024年', '2023年', '2022年', '2021年'],
       tableData: [
         {
           name: '农用塑料薄膜使用量',
           unit: '千克',
-          values: [37599, 37451, 37306.56, 37306.56]
+          // 顺序对应上面的年份顺序：2024, 2023, 2022, 2021
+          values: [37306.56, 37306.56, 37451, 37599]
         },
         {
           name: '地膜覆盖面积',
           unit: '亩',
-          values: [9283, 9264, 9245.48, 9245.48]
+          values: [9245.48, 9245.48, 9264, 9283]
         },
         {
           name: '农用柴油使用量',
           unit: '千克',
-          values: [74873, 75137, 75396.60, 75396.60]
+          values: [75396.60, 75396.60, 75137, 74873]
         },
         {
           name: '农药使用量',
           unit: '千克',
-          values: [22854, 22831, 22808.56, 0]
+          values: [0, 22808.56, 22831, 22854]
         }
       ],
       colors: ['#43aa8b', '#90be6d', '#f9c74f', '#f3722c'],
-      maxValue: 0
+      maxValue: 0,
+      displayMode: 'normal' // 'normal' or 'compact'
     };
   },
   created() {
     // 计算所有数据中的最大值
     this.maxValue = this.getOverallMaxValue();
+    
+    // 检测屏幕宽度，设置显示模式
+    this.setDisplayMode();
+    window.addEventListener('resize', this.setDisplayMode);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.setDisplayMode);
   },
   methods: {
     formatNumber(num) {
@@ -76,10 +86,20 @@ export default {
         maximumFractionDigits: 2
       });
     },
+    // 简化大数字显示
+    formatValueDisplay(value) {
+      if (value === 0) return "0";
+      if (this.displayMode === 'compact' && value >= 10000) {
+        return (value / 10000).toFixed(1) + '万';
+      } else if (this.displayMode === 'compact' && value >= 1000) {
+        return (value / 1000).toFixed(1) + '千';
+      }
+      return this.formatNumber(value);
+    },
     getOverallMaxValue() {
       let max = 0;
       this.tableData.forEach(item => {
-        const rowMax = Math.max(...item.values);
+        const rowMax = Math.max(...item.values.filter(val => val > 0)); // 排除0值
         if (rowMax > max) {
           max = rowMax;
         }
@@ -87,12 +107,17 @@ export default {
       return max;
     },
     getBarWidth(value) {
+      if (value === 0) return "0%"; // 值为0不显示条形
       // 使用整个表格的最大值作为基准
       const percentage = (value / this.maxValue) * 100;
       return `${Math.max(percentage, 3)}%`;
     },
     getBarColor(index) {
       return this.colors[index % this.colors.length];
+    },
+    setDisplayMode() {
+      // 根据屏幕宽度决定是否使用紧凑显示模式
+      this.displayMode = window.innerWidth < 1200 ? 'compact' : 'normal';
     }
   }
 };
@@ -106,54 +131,36 @@ export default {
   flex-direction: column;
   padding: 5px;
   box-sizing: border-box;
-  /* 确保表格在所有屏幕尺寸都有合适高度 */
-  min-height: 280px;
 }
 
 .table-header {
   font-size: 14px;
-  color: #f9c74f;
+  /* color: #f9c74f; */
   text-align: center;
-  margin-bottom: 8px;
-  font-weight: bold;
+  margin-bottom: 5px; /* 减少顶部空间 */
+  /* font-weight: bold; */
+  flex-shrink: 0;
 }
 
 .table-scroll-container {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  min-height: 230px; /* 确保表格高度足够显示内容 */
-  max-height: 100%; /* 限制最大高度为容器的100% */
-  /* 自定义滚动条样式 */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-}
-
-.table-scroll-container::-webkit-scrollbar {
-  width: 4px;
-}
-
-.table-scroll-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.table-scroll-container::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
+  overflow: visible; /* 改为可见，不使用滚动 */
+  display: flex;
+  flex-direction: column;
 }
 
 .consumption-table {
   width: 100%;
   border-collapse: collapse;
   color: #fff;
-  font-size: 14px;
+  font-size: 13px;
   table-layout: fixed; /* 提高表格渲染性能 */
 }
 
 .consumption-table th {
-  padding: 8px 12px;
-  text-align: left;
   background-color: rgba(0, 0, 0, 0.3);
+  padding: 6px 8px; /* 减少内边距 */
+  text-align: center;
   font-weight: bold;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   position: sticky;
@@ -162,7 +169,7 @@ export default {
 }
 
 .consumption-table td {
-  padding: 10px 12px;
+  padding: 6px 8px; /* 减少内边距 */
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -178,6 +185,10 @@ export default {
   width: 10%;
 }
 
+.year-col {
+  width: 16.25%;
+}
+
 .item-name {
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
@@ -189,14 +200,16 @@ export default {
 }
 
 .value-cell {
-  padding: 8px 10px !important;
+  padding: 6px 8px !important; /* 减少内边距 */
+  text-align: right;
 }
 
 .value-content {
   position: relative;
-  height: 24px;
+  height: 22px; /* 减少高度 */
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .value-bar {
@@ -214,68 +227,58 @@ export default {
   position: relative;
   z-index: 1;
   padding-left: 4px;
-}
-
-@media screen and (max-width: 1200px) {
-  .table-wrapper {
-    min-height: 250px;
-  }
-}
-
-@media screen and (max-width: 992px) {
-  .table-wrapper {
-    min-height: 240px;
-  }
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
 }
 
 @media screen and (max-width: 768px) {
-  .consumption-table {
-    font-size: 12px;
-  }
-  
-  .consumption-table th,
-  .consumption-table td {
-    padding: 6px 8px;
-  }
-  
-  .value-content {
-    height: 20px;
-  }
-  
-  .table-wrapper {
-    min-height: 220px;
-  }
-  
-  .table-scroll-container {
-    min-height: 180px;
-  }
-  
-  .table-header {
-    font-size: 13px;
-  }
-}
-
-@media screen and (max-width: 480px) {
   .consumption-table {
     font-size: 11px;
   }
   
   .consumption-table th,
   .consumption-table td {
-    padding: 5px 6px;
+    padding: 5px 4px;
   }
   
-  .table-wrapper {
-    min-height: 200px;
+  .value-content {
+    height: 20px;
   }
   
-  .table-scroll-container {
-    min-height: 160px;
+  .value-cell {
+    padding: 5px 4px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .consumption-table {
+    font-size: 10px;
+  }
+  
+  .consumption-table th,
+  .consumption-table td {
+    padding: 4px 2px;
+  }
+  
+  .value-content {
+    height: 18px;
   }
   
   .table-header {
     font-size: 12px;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
+  }
+  
+  .item-col {
+    width: 20%;
+  }
+  
+  .unit-col {
+    width: 8%;
+  }
+  
+  .year-col {
+    width: 18%;
   }
 }
 </style> 

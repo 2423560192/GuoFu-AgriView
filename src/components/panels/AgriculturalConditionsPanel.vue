@@ -2,22 +2,22 @@
   <div class="panel">
     <div class="panel-header">农业生产条件</div>
     <div class="panel-content">
-      <div class="chart-container">
+      <div class="chart-container left-column">
         <FertilizerTrend />
       </div>
-      <div class="chart-container">
+      <div class="chart-container right-column">
         <FertilizerSankey />
       </div>
-      <div class="chart-container">
+      <div class="chart-container left-column">
         <FertilizerPie />
       </div>
-      <div class="chart-container">
+      <div class="chart-container right-column">
         <FertilizerVillage />
       </div>
-      <div class="chart-container consumption-table-container">
+      <div class="chart-container left-column consumption-table-container">
         <OtherConsumptionTable />
       </div>
-      <div class="chart-container">
+      <div class="chart-container right-column">
         <OtherConsumptionVillage />
       </div>
     </div>
@@ -70,12 +70,13 @@ export default {
 
 .panel-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(3, minmax(260px, 1fr)); /* 增加最小行高 */
+  /* 调整左右列宽比例，左边略窄，右边略宽 */
+  grid-template-columns: 0.95fr 1.05fr;
+  grid-template-rows: repeat(3, minmax(260px, 1fr));
   gap: 10px;
   padding: 10px;
   overflow: auto;
-  height: calc(100% - 40px); /* 确保内容区域填满剩余空间 */
+  height: calc(100% - 40px);
 }
 
 .chart-container {
@@ -87,14 +88,32 @@ export default {
   overflow: hidden;
 }
 
+/* 左列容器样式 */
+.left-column {
+  padding-right: 2px; /* 右侧稍微减少内边距 */
+}
+
+/* 右列容器样式 */
+.right-column {
+  padding-left: 2px; /* 左侧稍微减少内边距 */
+}
+
 /* 专门为消耗表设置更高的最小高度 */
 .consumption-table-container {
-  min-height: 300px; /* 为表格容器设置更大的最小高度 */
+  min-height: auto !important; /* 移除最小高度限制 */
+  height: auto !important; /* 让高度自适应内容 */
 }
 
 @media screen and (max-width: 1400px) {
   .panel-content {
     grid-template-rows: repeat(3, minmax(240px, 1fr));
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .panel-content {
+    /* 在中等屏幕上进一步调整比例 */
+    grid-template-columns: 0.93fr 1.07fr;
   }
 }
 
@@ -106,10 +125,15 @@ export default {
 
 @media screen and (max-width: 768px) {
   .panel-content {
+    /* 小屏幕上恢复为单列布局 */
     grid-template-columns: 1fr;
     grid-template-rows: repeat(6, minmax(250px, auto));
     gap: 8px;
     padding: 8px;
+  }
+  
+  .left-column, .right-column {
+    padding: 0; /* 重置小屏幕上的内边距 */
   }
   
   .consumption-table-container {
