@@ -12,29 +12,29 @@ export default {
     return {
       chart: null,
       fertilizerData: [
-        // 2021年数据
+        // 2021年数据 - 已更新为正确数据
         { source: '2021年', target: '氮肥', value: 1006.98 },
         { source: '2021年', target: '磷肥', value: 591.99 },
         { source: '2021年', target: '钾肥', value: 158.00 },
         { source: '2021年', target: '复合肥', value: 620.84 },
         
-        // 2022年数据
-        { source: '2022年', target: '氮肥', value: 998.68 },
-        { source: '2022年', target: '磷肥', value: 582.15 },
-        { source: '2022年', target: '钾肥', value: 163.25 },
-        { source: '2022年', target: '复合肥', value: 632.64 },
+        // 2022年数据 - 已更新为正确数据
+        { source: '2022年', target: '氮肥', value: 2508.65 },
+        { source: '2022年', target: '磷肥', value: 5608.58 },
+        { source: '2022年', target: '钾肥', value: 301.95 },
+        { source: '2022年', target: '复合肥', value: 1755.43 },
         
-        // 2023年数据
-        { source: '2023年', target: '氮肥', value: 989.34 },
-        { source: '2023年', target: '磷肥', value: 573.82 },
-        { source: '2023年', target: '钾肥', value: 168.99 },
-        { source: '2023年', target: '复合肥', value: 646.27 },
+        // 2023年数据 - 已更新为正确数据
+        { source: '2023年', target: '氮肥', value: 2500.03 },
+        { source: '2023年', target: '磷肥', value: 3670.31 },
+        { source: '2023年', target: '钾肥', value: 285.05 },
+        { source: '2023年', target: '复合肥', value: 1505.02 },
         
-        // 2024年数据
-        { source: '2024年', target: '氮肥', value: 989.34 },
-        { source: '2024年', target: '磷肥', value: 573.82 },
-        { source: '2024年', target: '钾肥', value: 168.99 },
-        { source: '2024年', target: '复合肥', value: 646.27 }
+        // 2024年数据 - 已更新为正确数据
+        { source: '2024年', target: '氮肥', value: 2498.20 },
+        { source: '2024年', target: '磷肥', value: 3676.38 },
+        { source: '2024年', target: '钾肥', value: 285.80 },
+        { source: '2024年', target: '复合肥', value: 1515.63 }
       ],
       colors: {
         '2021年': '#08979c',

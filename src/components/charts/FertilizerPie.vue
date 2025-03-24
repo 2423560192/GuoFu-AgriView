@@ -11,12 +11,13 @@ export default {
   data() {
     return {
       chart: null,
-      fertilizerData: [
-        { name: '氮肥', value: 31.32 },
-        { name: '磷肥', value: 46.09 },
-        { name: '钾肥', value: 3.58 },
-        { name: '复合肥', value: 19.00 }
-      ]
+      pieData: [
+        { value: 2498.20, name: '氮肥', percentage: '31.32%' },
+        { value: 3676.38, name: '磷肥', percentage: '46.10%' },
+        { value: 285.80, name: '钾肥', percentage: '3.58%' },
+        { value: 1515.63, name: '复合肥', percentage: '19.00%' }
+      ],
+      colors: ['#ff4d4f', '#ffd666', '#95de64', '#69c0ff']
     }
   },
   mounted() {
@@ -27,80 +28,61 @@ export default {
     window.removeEventListener('resize', this.handleResize)
     if (this.chart) {
       this.chart.dispose()
-      this.chart = null
     }
   },
   methods: {
     initChart() {
+      if (this.chart) {
+        this.chart.dispose()
+      }
+      
       this.chart = this.$echarts.init(this.$refs.chart)
       
       const option = {
         tooltip: {
           trigger: 'item',
-          formatter: '{b}: {c}%'
+          formatter: '{a} <br/>{b}: {c} 吨 ({d}%)'
         },
         legend: {
           orient: 'vertical',
-          right: '5%',
+          left: 10,
           top: 'center',
           textStyle: {
             color: '#fff'
           },
-          itemWidth: 10,
-          itemHeight: 10,
-          itemGap: 10
+          formatter: name => {
+            const item = this.pieData.find(item => item.name === name)
+            return `${name}  ${item.percentage}`
+          }
         },
         series: [
           {
             name: '化肥使用量',
             type: 'pie',
             radius: ['40%', '70%'],
-            center: ['40%', '50%'],
+            center: ['65%', '50%'],
             avoidLabelOverlap: false,
             itemStyle: {
-              borderRadius: 5,
+              borderRadius: 4,
               borderColor: 'rgba(0, 0, 0, 0.2)',
-              borderWidth: 2
+              borderWidth: 1
             },
             label: {
-              show: true,
-              position: 'inside',
-              formatter: '{d}%',
-              fontSize: 12,
-              color: '#fff'
+              show: false,
+              position: 'center'
             },
             emphasis: {
               label: {
                 show: true,
                 fontSize: 14,
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                color: '#fff'
               }
             },
             labelLine: {
               show: false
             },
-            data: [
-              { 
-                value: this.fertilizerData[0].value, 
-                name: this.fertilizerData[0].name,
-                itemStyle: { color: '#f94144' }
-              },
-              { 
-                value: this.fertilizerData[1].value, 
-                name: this.fertilizerData[1].name,
-                itemStyle: { color: '#f9c74f' }
-              },
-              { 
-                value: this.fertilizerData[2].value, 
-                name: this.fertilizerData[2].name,
-                itemStyle: { color: '#90be6d' }
-              },
-              { 
-                value: this.fertilizerData[3].value, 
-                name: this.fertilizerData[3].name,
-                itemStyle: { color: '#43aa8b' }
-              }
-            ]
+            data: this.pieData
           }
         ]
       }
