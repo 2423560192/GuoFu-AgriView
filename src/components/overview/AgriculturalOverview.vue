@@ -7,9 +7,12 @@
       <div class="card-content">
         <div class="card-title">{{ item.title }}</div>
         <div class="card-value">{{ item.value }}</div>
-        <div class="card-trend" :class="getTrendClass(item.trend)">
-          <i :class="getTrendIcon(item.trend)"></i>
-          <span class="trend-percentage">{{ Math.abs(item.trend) }}%</span>
+        <div class="card-trend" :class="item.showPercentage ? 'percentage' : getTrendClass(item.trend)">
+          <i v-if="!item.showPercentage" :class="getTrendIcon(item.trend)"></i>
+          <i v-else class="el-icon-pie-chart"></i>
+          <span class="trend-percentage">
+            {{ item.showPercentage ? '占比 ' + item.percentValue + '%' : Math.abs(item.trend) + '%' }}
+          </span>
         </div>
       </div>
     </div>
@@ -25,28 +28,32 @@ export default {
         {
           title: '2024年农用化肥施用量',
           value: '7,976.01吨',
-          trend: 0.2,
+          trend: 0,
+          showPercentage: false,
           icon: 'el-icon-s-data',
+          color: 'rgba(52, 211, 153, 0.8)'
+        },
+        {
+          title: '2024年农业化肥最多使用量',
+          value: '磷肥 - 3,676.38吨',
+          trend: 0,
+          showPercentage: false,
+          icon: 'el-icon-s-grid',
+          color: 'rgba(16, 185, 129, 0.8)'
+        },
+        {
+          title: '平等村农业化肥使用量',
+          value: '512.87吨',
+          percentValue: 6.43,
+          showPercentage: true,
+          icon: 'el-icon-s-finance',
           color: 'rgba(52, 211, 153, 0.8)'
         },
         {
           title: '2024年农用塑料薄膜使用量',
           value: '37,306.56千克',
           trend: 0,
-          icon: 'el-icon-s-grid',
-          color: 'rgba(16, 185, 129, 0.8)'
-        },
-        {
-          title: '2024年地膜覆盖面积',
-          value: '9,245.48亩',
-          trend: 0,
-          icon: 'el-icon-s-finance',
-          color: 'rgba(52, 211, 153, 0.8)'
-        },
-        {
-          title: '2024年农用柴油使用量',
-          value: '75,396.60千克',
-          trend: 0.3,
+          showPercentage: false,
           icon: 'el-icon-s-marketing',
           color: 'rgba(16, 185, 129, 0.8)'
         }
@@ -158,6 +165,10 @@ export default {
 
 .card-trend.stable {
   color: #f9c74f;
+}
+
+.card-trend.percentage {
+  color: #60a5fa;
 }
 
 .card-trend i {

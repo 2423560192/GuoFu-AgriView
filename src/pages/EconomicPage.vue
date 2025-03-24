@@ -13,10 +13,31 @@
       <EconomicOverview />
     </div>
     
-    <!-- 主要内容区域 -->
+    <!-- 主要内容区域 - 修改为三列布局 -->
     <div class="content">
-      <div class="panel-container slide-in">
-        <EconomicCropsPanel />
+      <!-- 左侧面板 -->
+      <div class="left-panel slide-in">
+        <div class="chart-container">
+          <EconomicCropsTrend />
+        </div>
+        <div class="chart-container">
+          <EconomicCropsPie />
+        </div>
+      </div>
+      
+      <!-- 中间地图区域 - 新增 -->
+      <div class="center-panel slide-in-delay">
+        <EconomicRegionMap />
+      </div>
+      
+      <!-- 右侧面板 -->
+      <div class="right-panel slide-in">
+        <div class="chart-container">
+          <EconomicCropsTable />
+        </div>
+        <div class="chart-container">
+          <EconomicCropsVillage />
+        </div>
       </div>
     </div>
   </div>
@@ -25,13 +46,21 @@
 <script>
 import { getCurrentDate } from '../data/agricultural-data.js'
 import EconomicOverview from '../components/overview/EconomicOverview.vue'
-import EconomicCropsPanel from '../components/panels/EconomicCropsPanel.vue'
+import EconomicCropsTrend from '../components/charts/EconomicCropsTrend.vue'
+import EconomicCropsPie from '../components/charts/EconomicCropsPie.vue'
+import EconomicCropsTable from '../components/tables/EconomicCropsTable.vue'
+import EconomicCropsVillage from '../components/charts/EconomicCropsVillage.vue'
+import EconomicRegionMap from '../components/charts/EconomicRegionMap.vue'
 
 export default {
   name: 'EconomicPage',
   components: {
     EconomicOverview,
-    EconomicCropsPanel
+    EconomicCropsTrend,
+    EconomicCropsPie,
+    EconomicCropsTable,
+    EconomicCropsVillage,
+    EconomicRegionMap
   },
   data() {
     return {
@@ -71,41 +100,18 @@ export default {
 }
 
 .logo {
-  font-size: 28px;
+  font-size: 26px;
   margin-right: 15px;
   z-index: 1;
 }
 
 .title {
-  font-size: 28px;
-  font-weight: bold;
+  font-size: 22px;
   color: #fff;
-  text-shadow: 0 0 10px rgba(76, 213, 206, 0.8);
+  font-weight: bold;
   margin: 0;
   z-index: 1;
-  letter-spacing: 2px;
-  position: relative;
-  overflow: hidden;
-}
-
-.title::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    rgba(255,255,255,0) 0%, 
-    rgba(255,255,255,0.2) 50%, 
-    rgba(255,255,255,0) 100%);
-  animation: shine 3s infinite;
-}
-
-@keyframes shine {
-  0% { left: -100%; }
-  20% { left: 100%; }
-  100% { left: 100%; }
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .date {
@@ -134,15 +140,62 @@ export default {
   background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjMGYxYzMwIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaIiBzdHJva2U9IiMxYTMwNTkiIHN0cm9rZS13aWR0aD0iMSI+PC9wYXRoPgo8L3N2Zz4=');
 }
 
-.panel-container {
-  flex: 1;
+/* 三列布局 */
+.left-panel, .right-panel {
+  width: 27%;
   display: flex;
   flex-direction: column;
+  gap: 15px;
+}
+
+.center-panel {
+  flex: 1;
+  min-width: 0; /* 防止flex子项溢出 */
+  margin: 0 10px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.center-panel:hover {
+  box-shadow: 0 0 30px rgba(76, 213, 206, 0.2);
+  transform: translateY(-2px);
+}
+
+.chart-container {
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.chart-container:hover {
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
 }
 
 @media screen and (max-width: 1200px) {
   .content {
     flex-direction: column;
+  }
+  
+  .left-panel, .right-panel, .center-panel {
+    width: 100%;
+    margin: 0;
+  }
+  
+  .left-panel, .right-panel {
+    flex-direction: row;
+  }
+  
+  .center-panel {
+    min-height: 400px;
+    order: -1;
+    margin-bottom: 15px;
   }
 }
 
@@ -151,8 +204,20 @@ export default {
     font-size: 20px;
   }
   
+  .left-panel, .right-panel {
+    flex-direction: column;
+  }
+  
   .overview-section {
     height: auto;
+  }
+  
+  .chart-container {
+    min-height: 300px;
+  }
+  
+  .center-panel {
+    min-height: 350px;
   }
 }
 
@@ -169,6 +234,10 @@ export default {
 
 .slide-in {
   animation: slide-in 0.8s ease-out both;
+}
+
+.slide-in-delay {
+  animation: slide-in 0.8s ease-out 0.2s both;
 }
 
 @keyframes slide-in {

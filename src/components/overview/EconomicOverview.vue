@@ -7,9 +7,12 @@
       <div class="card-content">
         <div class="card-title">{{ item.title }}</div>
         <div class="card-value">{{ item.value }}</div>
-        <div class="card-trend" :class="item.trend > 0 ? 'up' : 'down'">
-          <i :class="item.trend > 0 ? 'el-icon-top' : 'el-icon-bottom'"></i>
-          <span class="trend-percentage">{{ Math.abs(item.trend) }}%</span>
+        <div v-if="item.showTrend !== false" class="card-trend" :class="item.showPercentage ? 'percentage' : (item.trend > 0 ? 'up' : 'down')">
+          <i v-if="!item.showPercentage" :class="item.trend > 0 ? 'el-icon-top' : 'el-icon-bottom'"></i>
+          <i v-else class="el-icon-pie-chart"></i>
+          <span class="trend-percentage">
+            {{ item.showPercentage ? '占比 ' + item.percentValue + '%' : Math.abs(item.trend) + '%' }}
+          </span>
         </div>
       </div>
     </div>
@@ -25,28 +28,36 @@ export default {
         {
           title: '2024年经济作物总播种面积',
           value: '51,524.5亩',
-          trend: 2.3,
+          trend: -0.24,
+          showPercentage: false,
+          showTrend: true,
           icon: 'el-icon-s-grid',
           color: 'rgba(52, 211, 153, 0.8)'
         },
         {
           title: '2024年经济作物种类数',
           value: '7种',
-          trend: 1.8,
+          trend: 0,
+          showPercentage: false,
+          showTrend: false,
           icon: 'el-icon-s-data',
           color: 'rgba(16, 185, 129, 0.8)'
         },
         {
-          title: '2024年经济作物最多播种面积',
-          value: '蔬菜及食用菌 - 32,684.8亩',
-          trend: 2.7,
+          title: '蔬菜及食用菌播种面积占比',
+          value: '32,684.8亩',
+          percentValue: 63.39,
+          showPercentage: true,
+          showTrend: true,
           icon: 'el-icon-s-finance',
           color: 'rgba(52, 211, 153, 0.8)'
         },
         {
-          title: '2024年村最多播种面积',
-          value: '平等村 - 4,067.8吨',
-          trend: 1.2,
+          title: '平等村经济作物播种面积占比',
+          value: '4,067.8亩',
+          percentValue: 8.37,
+          showPercentage: true,
+          showTrend: true,
           icon: 'el-icon-s-marketing',
           color: 'rgba(16, 185, 129, 0.8)'
         }
@@ -142,6 +153,10 @@ export default {
 
 .card-trend.down {
   color: #f94144;
+}
+
+.card-trend.percentage {
+  color: #60a5fa;
 }
 
 .card-trend i {

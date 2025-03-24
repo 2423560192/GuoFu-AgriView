@@ -7,9 +7,12 @@
       <div class="card-content">
         <div class="card-title">{{ item.title }}</div>
         <div class="card-value">{{ item.value }}</div>
-        <div class="card-trend" :class="item.trend > 0 ? 'up' : 'down'">
-          <i :class="item.trend > 0 ? 'el-icon-top' : 'el-icon-bottom'"></i>
-          <span class="trend-percentage">{{ Math.abs(item.trend) }}%</span>
+        <div class="card-trend" :class="item.showPercentage ? 'percentage' : (item.trend > 0 ? 'up' : 'down')">
+          <i v-if="!item.showPercentage" :class="item.trend > 0 ? 'el-icon-top' : 'el-icon-bottom'"></i>
+          <i v-else class="el-icon-pie-chart"></i>
+          <span class="trend-percentage">
+            {{ item.showPercentage ? '占比 ' + item.percentValue + '%' : Math.abs(item.trend) + '%' }}
+          </span>
         </div>
       </div>
     </div>
@@ -23,32 +26,36 @@ export default {
     return {
       overviewData: [
         {
-          title: '2024年粮食生产总播种面积',
-          value: '78,683亩',
-          trend: 1.2,
-          icon: 'el-icon-s-grid',
-          color: 'rgba(249, 199, 79, 0.8)'
-        },
-        {
-          title: '2024年粮食生产总产量',
-          value: '34,833吨',
-          trend: 0.9,
+          title: '2024年粮食总播种面积',
+          value: '63,825.7亩',
+          trend: 1.05,
+          showPercentage: false,
           icon: 'el-icon-s-data',
-          color: 'rgba(248, 150, 30, 0.8)'
+          color: 'rgba(52, 211, 153, 0.8)'
         },
         {
-          title: '2024年粮食最多播种面积',
-          value: '谷物 - 4,8459亩',
-          trend: 1.5,
+          title: '2024年粮食总产量',
+          value: '35,467.3吨',
+          trend: 1.01,
+          showPercentage: false,
+          icon: 'el-icon-s-grid',
+          color: 'rgba(16, 185, 129, 0.8)'
+        },
+        {
+          title: '2024年谷物总播种面积',
+          value: '39,307.5亩',
+          percentValue: 61.59,
+          showPercentage: true,
           icon: 'el-icon-s-finance',
-          color: 'rgba(249, 199, 79, 0.8)'
+          color: 'rgba(52, 211, 153, 0.8)'
         },
         {
-          title: '2024年粮食最多产量',
-          value: '谷物 - 2,3906吨',
-          trend: 0.3,
+          title: '2024年谷物总产量',
+          value: '24,341.8吨',
+          percentValue: 68.63,
+          showPercentage: true,
           icon: 'el-icon-s-marketing',
-          color: 'rgba(248, 150, 30, 0.8)'
+          color: 'rgba(16, 185, 129, 0.8)'
         }
       ]
     }
@@ -137,11 +144,15 @@ export default {
 }
 
 .card-trend.up {
-  color: #f9c74f;
+  color: #34d399;
 }
 
 .card-trend.down {
   color: #f94144;
+}
+
+.card-trend.percentage {
+  color: #60a5fa;
 }
 
 .card-trend i {
@@ -151,9 +162,7 @@ export default {
 .trend-percentage {
   font-size: 16px;
   font-weight: bold;
-  /* margin-left: 2px; */
 }
-
 
 @media screen and (max-width: 1200px) {
   .overview-container {
