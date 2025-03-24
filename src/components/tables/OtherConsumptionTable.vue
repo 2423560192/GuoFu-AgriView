@@ -1,32 +1,35 @@
 <template>
   <div class="table-wrapper">
-    <table class="consumption-table">
-      <thead>
-        <tr>
-          <th class="item-col">项目</th>
-          <th class="unit-col">单位</th>
-          <th v-for="year in years" :key="year">{{ year }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in tableData" :key="index">
-          <td class="item-name">{{ item.name }}</td>
-          <td class="unit">{{ item.unit }}</td>
-          <td v-for="(value, yearIndex) in item.values" :key="yearIndex" class="value-cell">
-            <div class="value-content">
-              <div 
-                class="value-bar" 
-                :style="{ 
-                  width: getBarWidth(value), 
-                  backgroundColor: getBarColor(index)
-                }"
-              ></div>
-              <span class="value-text">{{ formatNumber(value) }}</span>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-header">农业生产消耗表</div>
+    <div class="table-scroll-container">
+      <table class="consumption-table">
+        <thead>
+          <tr>
+            <th class="item-col">项目</th>
+            <th class="unit-col">单位</th>
+            <th v-for="year in years" :key="year">{{ year }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in tableData" :key="index">
+            <td class="item-name">{{ item.name }}</td>
+            <td class="unit">{{ item.unit }}</td>
+            <td v-for="(value, yearIndex) in item.values" :key="yearIndex" class="value-cell">
+              <div class="value-content">
+                <div 
+                  class="value-bar" 
+                  :style="{ 
+                    width: getBarWidth(value), 
+                    backgroundColor: getBarColor(index)
+                  }"
+                ></div>
+                <span class="value-text">{{ formatNumber(value) }}</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -100,11 +103,43 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
+  flex-direction: column;
+  padding: 5px;
   box-sizing: border-box;
-  overflow: auto;
+  /* 确保表格在所有屏幕尺寸都有合适高度 */
+  min-height: 280px;
+}
+
+.table-header {
+  font-size: 14px;
+  color: #f9c74f;
+  text-align: center;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.table-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 230px; /* 确保表格高度足够显示内容 */
+  max-height: 100%; /* 限制最大高度为容器的100% */
+  /* 自定义滚动条样式 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.table-scroll-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.table-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-scroll-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
 }
 
 .consumption-table {
@@ -112,6 +147,7 @@ export default {
   border-collapse: collapse;
   color: #fff;
   font-size: 14px;
+  table-layout: fixed; /* 提高表格渲染性能 */
 }
 
 .consumption-table th {
@@ -120,6 +156,9 @@ export default {
   background-color: rgba(0, 0, 0, 0.3);
   font-weight: bold;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .consumption-table td {
@@ -146,11 +185,11 @@ export default {
 
 .unit {
   color: rgba(255, 255, 255, 0.6);
-  font-size: 13px;
+  text-align: center;
 }
 
 .value-cell {
-  position: relative;
+  padding: 8px 10px !important;
 }
 
 .value-content {
@@ -177,6 +216,18 @@ export default {
   padding-left: 4px;
 }
 
+@media screen and (max-width: 1200px) {
+  .table-wrapper {
+    min-height: 250px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .table-wrapper {
+    min-height: 240px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .consumption-table {
     font-size: 12px;
@@ -189,6 +240,42 @@ export default {
   
   .value-content {
     height: 20px;
+  }
+  
+  .table-wrapper {
+    min-height: 220px;
+  }
+  
+  .table-scroll-container {
+    min-height: 180px;
+  }
+  
+  .table-header {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .consumption-table {
+    font-size: 11px;
+  }
+  
+  .consumption-table th,
+  .consumption-table td {
+    padding: 5px 6px;
+  }
+  
+  .table-wrapper {
+    min-height: 200px;
+  }
+  
+  .table-scroll-container {
+    min-height: 160px;
+  }
+  
+  .table-header {
+    font-size: 12px;
+    margin-bottom: 5px;
   }
 }
 </style> 

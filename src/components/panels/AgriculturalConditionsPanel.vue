@@ -14,7 +14,7 @@
       <div class="chart-container">
         <FertilizerVillage />
       </div>
-      <div class="chart-container">
+      <div class="chart-container consumption-table-container">
         <OtherConsumptionTable />
       </div>
       <div class="chart-container">
@@ -69,13 +69,13 @@ export default {
 }
 
 .panel-content {
-  flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(3, minmax(260px, 1fr)); /* 增加最小行高 */
   gap: 10px;
   padding: 10px;
   overflow: auto;
+  height: calc(100% - 40px); /* 确保内容区域填满剩余空间 */
 }
 
 .chart-container {
@@ -87,10 +87,50 @@ export default {
   overflow: hidden;
 }
 
+/* 专门为消耗表设置更高的最小高度 */
+.consumption-table-container {
+  min-height: 300px; /* 为表格容器设置更大的最小高度 */
+}
+
+@media screen and (max-width: 1400px) {
+  .panel-content {
+    grid-template-rows: repeat(3, minmax(240px, 1fr));
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .panel-content {
+    grid-template-rows: repeat(3, minmax(220px, 1fr));
+  }
+}
+
 @media screen and (max-width: 768px) {
   .panel-content {
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: repeat(6, minmax(250px, auto));
+    gap: 8px;
+    padding: 8px;
+  }
+  
+  .consumption-table-container {
+    min-height: 280px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .panel-content {
+    grid-template-rows: repeat(6, minmax(220px, auto));
+    gap: 6px;
+    padding: 6px;
+  }
+  
+  .consumption-table-container {
+    min-height: 260px;
+  }
+  
+  .panel-header {
+    height: 36px;
+    font-size: 14px;
   }
 }
 </style> 
