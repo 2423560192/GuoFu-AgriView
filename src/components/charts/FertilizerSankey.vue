@@ -19,35 +19,34 @@ export default {
         { source: '2021年', target: '复合肥', value: 620.84 },
         
         // 2022年数据
-        { source: '2022年', target: '氮肥', value: 2508.65 },
-        { source: '2022年', target: '磷肥', value: 5608.58 },
-        { source: '2022年', target: '钾肥', value: 301.95 },
-        { source: '2022年', target: '复合肥', value: 1755.43 },
+        { source: '2022年', target: '氮肥', value: 998.68 },
+        { source: '2022年', target: '磷肥', value: 582.15 },
+        { source: '2022年', target: '钾肥', value: 163.25 },
+        { source: '2022年', target: '复合肥', value: 632.64 },
         
         // 2023年数据
-        { source: '2023年', target: '氮肥', value: 2500.03 },
-        { source: '2023年', target: '磷肥', value: 3670.31 },
-        { source: '2023年', target: '钾肥', value: 285.05 },
-        { source: '2023年', target: '复合肥', value: 1505.02 },
+        { source: '2023年', target: '氮肥', value: 989.34 },
+        { source: '2023年', target: '磷肥', value: 573.82 },
+        { source: '2023年', target: '钾肥', value: 168.99 },
+        { source: '2023年', target: '复合肥', value: 646.27 },
         
         // 2024年数据
-        { source: '2024年', target: '氮肥', value: 2498.20 },
-        { source: '2024年', target: '磷肥', value: 3676.38 },
-        { source: '2024年', target: '钾肥', value: 285.80 },
-        { source: '2024年', target: '复合肥', value: 1515.63 }
+        { source: '2024年', target: '氮肥', value: 989.34 },
+        { source: '2024年', target: '磷肥', value: 573.82 },
+        { source: '2024年', target: '钾肥', value: 168.99 },
+        { source: '2024年', target: '复合肥', value: 646.27 }
       ],
       colors: {
-        '2021年': '#276678',
-        '2022年': '#1687a7',
-        '2023年': '#00a8cc',
-        '2024年': '#4cd5ce',
-        '氮肥': '#4cd5ce',
-        '磷肥': '#43aa8b',
-        '钾肥': '#f9c74f',
-        '复合肥': '#f94144'
+        '2021年': '#08979c',
+        '2022年': '#13c2c2',
+        '2023年': '#36cfc9',
+        '2024年': '#5cdbd3',
+        '氮肥': '#ff4d4f',
+        '磷肥': '#ffd666',
+        '钾肥': '#95de64',
+        '复合肥': '#69c0ff'
       },
-      // 年份按从上到下的顺序
-      yearOrder: ['2024年', '2023年', '2022年', '2021年'],
+      yearOrder: ['2021年', '2022年', '2023年', '2024年'],
       fertilizerOrder: ['氮肥', '磷肥', '钾肥', '复合肥']
     };
   },
@@ -56,11 +55,10 @@ export default {
     window.addEventListener('resize', this.handleResize);
   },
   beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
     if (this.chart) {
       this.chart.dispose();
-      this.chart = null;
     }
-    window.removeEventListener('resize', this.handleResize);
   },
   methods: {
     initChart() {
@@ -99,7 +97,7 @@ export default {
       });
       
       // 添加肥料类型节点
-      this.fertilizerOrder.forEach((fertilizer, index) => {
+      this.fertilizerOrder.forEach((fertilizer) => {
         nodes.push({
           name: fertilizer,
           itemStyle: { color: this.colors[fertilizer] }
@@ -121,10 +119,14 @@ export default {
             return params.name;
           }
         },
+        grid: {
+          containLabel: true,
+          width: '80%' // 设置图表区域宽度为容器的80%
+        },
         series: [{
           type: 'sankey',
-          left: '5%',
-          right: '5%',
+          left: '8%',  // 调整左边距
+          right: '12%', // 调整右边距
           top: '5%',
           bottom: '5%',
           nodeWidth: 20,
@@ -138,17 +140,13 @@ export default {
           links: adjustedLinks,
           label: {
             position: 'right',
-            color: '#fff',
-            fontSize: 12
+            fontSize: 12,
+            color: '#fff'
           },
           lineStyle: {
-            color: 'gradient',
-            curveness: 0.5,
-            opacity: 0.7
-          },
-          itemStyle: {
-            borderWidth: 1,
-            borderColor: '#333'
+            color: 'source',
+            opacity: 0.4,
+            curveness: 0.5
           }
         }]
       };
@@ -166,16 +164,18 @@ export default {
 
 <style scoped>
 .chart-wrapper {
-  width: 100%;
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 5px;
-  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .chart-title {
   font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+  background: rgba(0, 0, 0, 0.1);
   color: #fff;
   text-align: center;
   margin-bottom: 5px;
@@ -184,13 +184,51 @@ export default {
 
 .chart-container {
   flex: 1;
-  width: 100%;
-  min-height: 250px; /* 确保图表有足够的高度 */
+  width: 90%; /* 容器宽度设置为90% */
+  margin: 0 auto; /* 居中显示 */
+  min-height: 220px; /* 确保图表有足够的高度 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 1200px) {
+  .chart-container {
+    min-height: 200px;
+    width: 92%; /* 小屏幕上略微增加宽度 */
+  }
+  
+  .chart-title {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .chart-container {
+    min-height: 180px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .chart-container {
+    min-height: 160px;
+    width: 95%; /* 在移动设备上几乎占满 */
+  }
+  
+  .chart-title {
+    font-size: 12px;
+    height: 25px;
+    line-height: 25px;
+  }
 }
 
 @media screen and (max-width: 480px) {
   .chart-title {
-    font-size: 12px;
+    font-size: 11px;
+  }
+  
+  .chart-container {
+    min-height: 140px;
   }
 }
 </style> 
